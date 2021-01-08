@@ -9,6 +9,8 @@ namespace Server.DataBase
 
         public DbSet<TrafficLight> traffic_lights {get; set;}
 
+        public DbSet<TicketState> ticket_state {get; set;}
+
         public DbSet<TicketTrafficLight> ticket_traffic_lights {get; set;}
         public DbSet<OtherTicket> other_tickets {get; set;}
         
