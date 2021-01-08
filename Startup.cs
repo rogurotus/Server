@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.EntityFrameworkCore;
+using Server.DataBase;
 
 namespace Docker
 {
@@ -24,6 +26,17 @@ namespace Docker
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            services.AddDbContext<PostgreDataBase>(options =>
+                options.UseNpgsql
+                (
+                    "User ID=user_server;" +
+                    "Password=TRUePass1984;" +
+                    "Host=172.17.0.2;" + // захардкоденый ip postgre контейнера докера
+                    "Port=5432;" +
+                    "Database=traffic_light_service_db;" +
+                    "Pooling=true;"
+                ));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
