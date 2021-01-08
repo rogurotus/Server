@@ -40,5 +40,47 @@ namespace Server.Controllers
             }
             return Content("{\"error\": \"Заявка не найдена\", \"message\": null}");
         }
+
+        private TicketState GetTicketState(string name)
+        {
+            TicketState state = _db
+                .ticket_state
+                .Where(s => s.name == name)
+                .FirstOrDefault();
+            if(state == null)
+            {
+                state = new TicketState {name = name};
+                _db.ticket_state.Add(state);
+            }
+            return state;
+        }
+
+        private string hasher(string data)
+        {
+            MD5 md5 = MD5.Create();
+            byte[] hashData = md5.ComputeHash(Encoding.Default.GetBytes(data));
+            return BitConverter.ToString(hashData).Replace("-","");
+        }
+
+        public IActionResult New(int id, string user_id)
+        {
+            //TODO проверка на существование светофора
+
+            string date = DateTime.UtcNow.ToString("yyyy-MM-dd");
+            string token = hasher(id + user_id + date);
+
+            Ticket ticket = _db.tikets.Where(t => t.token == token).FirstOrDefault();
+            
+            if(ticket == null)
+            {
+                Ticket new_ticket = new Ticket {token = token, state = GetTicketState("Поступила")};
+                _db.tikets.Add(new_ticket);
+                _db.SaveChanges();
+
+                return Content("{\"error\": null, token:\"" + token + "\"}");
+            }
+
+            return Content("{\"error\": \"Заявка уже существует\", \"token\": null}");
+        }
     }
 }
