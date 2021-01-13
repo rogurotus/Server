@@ -14,7 +14,9 @@ using Server.Models;
 
 namespace Server.Controllers
 {
-    public class TicketController : Controller
+    [ApiController]
+    [Route("[controller]")]
+    public class TicketController : ControllerBase
     {
         private PostgreDataBase _db;
 
@@ -23,34 +25,42 @@ namespace Server.Controllers
             _db = db;
         }
 
-        public IActionResult Check(string token)
+        [HttpGet("{token}")]
+        public async Task<ActionResult<string>> Check(string token)
         {
-            Ticket ticket = _db.tikets.Where(t => t.token == token).FirstOrDefault();
+            Ticket ticket = await _db.tikets.Where(t => t.token == token).FirstOrDefaultAsync();
 
             if (ticket != null)
             {
                 // поле ticket.state не подключается и state всегда null. 
                 // начало костыля
 
-                string state = _db.ticket_state.Where(s => s.id == ticket.state_id).First().name;
+                TicketState ticket_state = await 
+                    _db.ticket_state
+                    .Where(s => s.id == ticket.state_id)
+                    .FirstAsync();
+                    
+                string state = ticket_state.name;
 
                 // конец костыля
 
-                return Content("{\"error\": null, \"message\": \"" + state + "\"}");
+                return "{\"error\": null, \"message\": \"" + state + "\"}";
             }
-            return Content("{\"error\": \"Заявка не найдена\", \"message\": null}");
+            return "{\"error\": \"Заявка не найдена\", \"message\": null}";
         }
 
-        private TicketState GetTicketState(string name)
+
+        private async Task<TicketState> GetTicketState(string name)
         {
-            TicketState state = _db
+            TicketState state = await _db
                 .ticket_state
                 .Where(s => s.name == name)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
             if(state == null)
             {
                 state = new TicketState {name = name};
-                _db.ticket_state.Add(state);
+                await _db.ticket_state.AddAsync(state);
+                await _db.SaveChangesAsync();
             }
             return state;
         }
@@ -62,25 +72,29 @@ namespace Server.Controllers
             return BitConverter.ToString(hashData).Replace("-","");
         }
 
-        public IActionResult New(int id, string user_id)
+        [HttpPost]
+        public async Task<ActionResult<string>> New(int id, string user_id)
         {
             //TODO проверка на существование светофора
 
             string date = DateTime.UtcNow.ToString("yyyy-MM-dd");
             string token = hasher(id + user_id + date);
 
-            Ticket ticket = _db.tikets.Where(t => t.token == token).FirstOrDefault();
+            Ticket ticket = await _db.tikets.Where(t => t.token == token).FirstOrDefaultAsync();
             
             if(ticket == null)
             {
-                Ticket new_ticket = new Ticket {token = token, state = GetTicketState("Поступила")};
-                _db.tikets.Add(new_ticket);
-                _db.SaveChanges();
+                Ticket new_ticket = new Ticket 
+                    {
+                        token = token, state = await GetTicketState("Поступила")
+                    };
+                await _db.tikets.AddAsync(new_ticket);
+                await _db.SaveChangesAsync();
 
-                return Content("{\"error\": null, token:\"" + token + "\"}");
+                return "{\"error\": null, token:\"" + token + "\"}";
             }
 
-            return Content("{\"error\": \"Заявка уже существует\", \"token\": null}");
+            return "{\"error\": \"Заявка уже существует\", \"token\": null}";
         }
     }
 }
