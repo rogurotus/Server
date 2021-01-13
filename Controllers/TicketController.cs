@@ -66,7 +66,7 @@ namespace Server.Controllers
             //TODO проверка на существование светофора
 
             string date = DateTime.UtcNow.ToString("yyyy-MM-dd");
-            string token = hasher(mobile_ticket.id + mobile_ticket.user_id + date);
+            string token = hasher(mobile_ticket.traffic_light_id + mobile_ticket.user_id + date);
 
             Ticket ticket = await _db.tikets.Where(t => t.token == token).FirstOrDefaultAsync();
             
