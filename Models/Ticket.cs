@@ -11,11 +11,11 @@ namespace Server.Models
         
         public string token {get; set;}
 
-        public int state_id {get; set;} 
+        public int state_id {get; set;}
         [ForeignKey("state_id")]
         public TicketState state {get; set;}
 
-        public int district_id {get; set;} 
+        public int district_id {get; set;}
         [ForeignKey("district_id")]
         public District district {get; set;}
     }

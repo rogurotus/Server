@@ -7,11 +7,10 @@ namespace Server.Models
     public class TicketTrafficLight
     {
         [Key]
-        public int ticket_id {get; set;}
-        [ForeignKey("ticket_id")]
+        public int ticket_id {get;set;} 
         public Ticket ticket {get; set;}
 
-        public int traffic_light_id {get;set;}
+        public int traffic_light_id {get;set;} 
         [ForeignKey("traffic_light_id")]
         public TrafficLight traffic_light {get; set;}
 

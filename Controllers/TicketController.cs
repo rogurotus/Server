@@ -28,22 +28,22 @@ namespace Server.Controllers
         [HttpGet("Check")]
         public async Task<ActionResult<MobileResponse>> Check(string token)
         {
-            Ticket ticket = await _db.tikets.Where(t => t.token == token).FirstOrDefaultAsync();
+            var ticket = await _db.tikets
+                .Join(
+                    _db.ticket_states,
+                    t => t.state_id,
+                    s => s.id,
+                    (t,s) => new
+                    {
+                        token = t.token,
+                        state = s,
+                    }
+                )
+                .Where(t => t.token == token).FirstOrDefaultAsync();
 
             if (ticket != null)
             {
-                // поле ticket.state не подключается и state всегда null. 
-                // начало костыля
-
-                TicketState ticket_state = await 
-                    _db.ticket_state
-                    .Where(s => s.id == ticket.state_id)
-                    .FirstAsync();
-                    
-                string state = ticket_state.name;
-
-                // конец костыля
-                return new MobileResponse{message = state};
+                return new MobileResponse{message = ticket.state.name};
             }
             return new MobileResponse{error = "Заявка не найдена"};
         }
@@ -52,13 +52,13 @@ namespace Server.Controllers
         private async Task<TicketState> GetTicketState(string name)
         {
             TicketState state = await _db
-                .ticket_state
+                .ticket_states
                 .Where(s => s.name == name)
                 .FirstOrDefaultAsync();
             if(state == null)
             {
                 state = new TicketState {name = name};
-                await _db.ticket_state.AddAsync(state);
+                await _db.ticket_states.AddAsync(state);
                 await _db.SaveChangesAsync();
             }
             return state;
@@ -74,9 +74,18 @@ namespace Server.Controllers
         [HttpPost]
         public async Task<ActionResult<MobileResponse>> New(MobileTicket mobile_ticket)
         {
-
-            TrafficLight traffic_light = await _db.traffic_lights
-                .Where(t => t.id == mobile_ticket.traffic_light_id).FirstOrDefaultAsync();
+            var traffic_light = await _db.traffic_lights
+                .Join(
+                    _db.districts, 
+                    t => t.district_id, 
+                    d => d.id, 
+                    (t,d) => new
+                    {
+                        id = t.id,
+                        district = d,
+                    })
+                .Where(t => t.id == mobile_ticket.traffic_light_id)
+                .FirstOrDefaultAsync();
             if(traffic_light == null)
             {
                 return new MobileResponse{error = "Светофор не найден"};
@@ -87,18 +96,14 @@ namespace Server.Controllers
             Ticket ticket = await _db.tikets.Where(t => t.token == token).FirstOrDefaultAsync();
 
             if(ticket == null)
-            {
-                District district = await _db.district
-                    .Where(d => d.id == traffic_light.district_id)
-                    .FirstOrDefaultAsync();
-                
-                if(district == null) {return new MobileResponse{error = "Район светофора не найден"};}
+            {   
+                if(traffic_light.district == null) {return new MobileResponse{error = "Район светофора не найден"};}
 
                 Ticket new_ticket = new Ticket 
                     {
                         token = token, 
                         state = await GetTicketState("Поступила"),
-                        district_id = district.id,
+                        district = traffic_light.district,
                     };
                 await _db.tikets.AddAsync(new_ticket);
 
@@ -112,7 +117,7 @@ namespace Server.Controllers
                     {
                         ticket_id = new_ticket.id,
                         description = desc,
-                        traffic_light_id = mobile_ticket.traffic_light_id,
+                        traffic_light_id = traffic_light.id,
                     }
                 );
 

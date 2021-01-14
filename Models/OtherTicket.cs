@@ -8,7 +8,6 @@ namespace Server.Models
     {
         [Key]
         public int ticket_id {get; set;}
-
         [ForeignKey("ticket_id")]
         public Ticket ticket {get; set;}
 

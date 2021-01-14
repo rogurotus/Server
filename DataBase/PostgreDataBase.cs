@@ -7,8 +7,8 @@ namespace Server.DataBase
 {
     public class PostgreDataBase : DbContext
     {
-        public DbSet<District> district {get; set;}
-        private List<District> test_district = new List<District> 
+        public DbSet<District> districts {get; set;}
+        private static List<District> test_district = new List<District> 
         {
             new District{id = 1, name = "Железнодорожный"},
             new District{id = 2, name = "Кировский"},
@@ -35,7 +35,7 @@ namespace Server.DataBase
             new TrafficLight{id = 10, long_ = 42, lat = -42, district_id = 3},
         };
 
-        public DbSet<TicketState> ticket_state {get; set;}
+        public DbSet<TicketState> ticket_states {get; set;}
         private List<TicketState> test_ticket_state = new List<TicketState> 
         {
             new TicketState{name = "Поступила"},
@@ -51,11 +51,11 @@ namespace Server.DataBase
         {
             Database.EnsureCreated();
             // тестовые наборы
-            if(this.ticket_state.Count() > 0) {return;}
+            if(this.ticket_states.Count() > 0) {return;}
 
             foreach(var d in test_district)
             {
-                this.district.Add(d);
+                this.districts.Add(d);
             }
             foreach(var t in test_light)
             {
@@ -63,10 +63,21 @@ namespace Server.DataBase
             }
             foreach(var s in test_ticket_state)
             {
-                this.ticket_state.Add(s);
+                this.ticket_states.Add(s);
             }
 
             this.SaveChanges();
         }
+
+/*
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<OtherTicket>()
+                .HasNoKey();
+
+            modelBuilder.Entity<TicketTrafficLight>()
+                .HasNoKey();
+        }
+*/
     }
 }
