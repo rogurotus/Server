@@ -68,16 +68,5 @@ namespace Server.DataBase
 
             this.SaveChanges();
         }
-
-/*
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<OtherTicket>()
-                .HasNoKey();
-
-            modelBuilder.Entity<TicketTrafficLight>()
-                .HasNoKey();
-        }
-*/
     }
 }
