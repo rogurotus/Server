@@ -13,5 +13,9 @@ namespace Server.Models
         public float long_ {get; set;}
 
         public float lat {get; set;}
+
+        public int district_id {get; set;} 
+        [ForeignKey("district_id")]
+        public District district {get; set;}
     }
 }

@@ -7,21 +7,32 @@ namespace Server.DataBase
 {
     public class PostgreDataBase : DbContext
     {
+        public DbSet<District> district {get; set;}
+        private List<District> test_district = new List<District> 
+        {
+            new District{id = 1, name = "Железнодорожный"},
+            new District{id = 2, name = "Кировский"},
+            new District{id = 3, name = "Ленинский"},
+            new District{id = 4, name = "Октябрьский"},
+            new District{id = 5, name = "Свердловский"},
+            new District{id = 6, name = "Советский"},
+            new District{id = 7, name = "Центральный"},
+        };
         public DbSet<Ticket> tikets {get; set;}
 
         public DbSet<TrafficLight> traffic_lights {get; set;}
         private List<TrafficLight> test_light = new List<TrafficLight> 
         {
-            new TrafficLight{id = 1, long_ = 42, lat = -42},
-            new TrafficLight{id = 2, long_ = 42, lat = -42},
-            new TrafficLight{id = 3, long_ = 42, lat = -42},
-            new TrafficLight{id = 4, long_ = 42, lat = -42},
-            new TrafficLight{id = 5, long_ = 42, lat = -42},
-            new TrafficLight{id = 6, long_ = 42, lat = -42},
-            new TrafficLight{id = 7, long_ = 42, lat = -42},
-            new TrafficLight{id = 8, long_ = 42, lat = -42},
-            new TrafficLight{id = 9, long_ = 42, lat = -42},
-            new TrafficLight{id = 10, long_ = 42, lat = -42},
+            new TrafficLight{id = 1, long_ = 42, lat = -42, district_id = 1},
+            new TrafficLight{id = 2, long_ = 42, lat = -42, district_id = 2},
+            new TrafficLight{id = 3, long_ = 42, lat = -42, district_id = 3},
+            new TrafficLight{id = 4, long_ = 42, lat = -42, district_id = 4},
+            new TrafficLight{id = 5, long_ = 42, lat = -42, district_id = 5},
+            new TrafficLight{id = 6, long_ = 42, lat = -42, district_id = 6},
+            new TrafficLight{id = 7, long_ = 42, lat = -42, district_id = 7},
+            new TrafficLight{id = 8, long_ = 42, lat = -42, district_id = 1},
+            new TrafficLight{id = 9, long_ = 42, lat = -42, district_id = 2},
+            new TrafficLight{id = 10, long_ = 42, lat = -42, district_id = 3},
         };
 
         public DbSet<TicketState> ticket_state {get; set;}
@@ -42,16 +53,19 @@ namespace Server.DataBase
             // тестовые наборы
             if(this.ticket_state.Count() > 0) {return;}
 
+            foreach(var d in test_district)
+            {
+                this.district.Add(d);
+            }
             foreach(var t in test_light)
             {
                 this.traffic_lights.Add(t);
             }
-            test_light.Clear();
             foreach(var s in test_ticket_state)
             {
                 this.ticket_state.Add(s);
             }
-            test_ticket_state.Clear();
+
             this.SaveChanges();
         }
     }
