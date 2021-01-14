@@ -86,12 +86,20 @@ namespace Server.Controllers
             string token = hasher(mobile_ticket.traffic_light_id + mobile_ticket.user_id + date);
 
             Ticket ticket = await _db.tikets.Where(t => t.token == token).FirstOrDefaultAsync();
-            
+
             if(ticket == null)
             {
+                District district = await _db.district
+                    .Where(d => d.id == traffic_light.district_id)
+                    .FirstOrDefaultAsync();
+                
+                if(district == null) {return new MobileResponse{error = "Район светофора не найден"};}
+
                 Ticket new_ticket = new Ticket 
                     {
-                        token = token, state = await GetTicketState("Поступила")
+                        token = token, 
+                        state = await GetTicketState("Поступила"),
+                        district_id = district.id,
                     };
                 await _db.tikets.AddAsync(new_ticket);
                 await _db.SaveChangesAsync();
