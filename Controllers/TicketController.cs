@@ -32,7 +32,18 @@ namespace Server.Controllers
 
             if (ticket != null)
             {
-                return new MobileResponse{message = ticket.state.name};
+                // поле ticket.state не подключается и state всегда null. 
+                // начало костыля
+
+                TicketState ticket_state = await 
+                    _db.ticket_state
+                    .Where(s => s.id == ticket.state_id)
+                    .FirstAsync();
+                    
+                string state = ticket_state.name;
+
+                // конец костыля
+                return new MobileResponse{message = state};
             }
             return new MobileResponse{error = "Заявка не найдена"};
         }
