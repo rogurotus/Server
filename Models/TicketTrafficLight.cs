@@ -11,6 +11,8 @@ namespace Server.Models
         [ForeignKey("tiket_id")]
         public Ticket ticket {get; set;}
 
+        public int traffic_light_id {get;set;}
+        [ForeignKey("traffic_light_id")]
         public TrafficLight traffic_light {get; set;}
 
         public string description {get; set;}
