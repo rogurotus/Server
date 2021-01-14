@@ -8,7 +8,7 @@ namespace Server.Models
     {
         [Key]
         public int ticket_id {get; set;}
-        [ForeignKey("tiket_id")]
+        [ForeignKey("ticket_id")]
         public Ticket ticket {get; set;}
 
         public int traffic_light_id {get;set;}
