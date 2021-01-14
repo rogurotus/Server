@@ -84,7 +84,6 @@ namespace Server.Controllers
 
             string date = DateTime.UtcNow.ToString("yyyy-MM-dd");
             string token = hasher(mobile_ticket.traffic_light_id + mobile_ticket.user_id + date);
-
             Ticket ticket = await _db.tikets.Where(t => t.token == token).FirstOrDefaultAsync();
 
             if(ticket == null)
@@ -102,8 +101,22 @@ namespace Server.Controllers
                         district_id = district.id,
                     };
                 await _db.tikets.AddAsync(new_ticket);
-                await _db.SaveChangesAsync();
 
+                string desc = mobile_ticket.description;
+                if(desc == null)
+                {
+                    desc = "Светофор не работает";
+                }
+                await _db.ticket_traffic_lights.AddAsync(
+                    new TicketTrafficLight
+                    {
+                        ticket_id = new_ticket.id,
+                        description = desc,
+                        traffic_light_id = mobile_ticket.traffic_light_id,
+                    }
+                );
+
+                await _db.SaveChangesAsync();
                 return new MobileResponse{message = token};
             }
 
