@@ -63,7 +63,13 @@ namespace Server.Controllers
         [HttpPost]
         public async Task<ActionResult<MobileResponse>> New(MobileTicket mobile_ticket)
         {
-            //TODO проверка на существование светофора
+
+            TrafficLight traffic_light = await _db.traffic_lights
+                .Where(t => t.id == mobile_ticket.traffic_light_id).FirstOrDefaultAsync();
+            if(traffic_light == null)
+            {
+                return new MobileResponse{error = "Светофор не найден"};
+            }
 
             string date = DateTime.UtcNow.ToString("yyyy-MM-dd");
             string token = hasher(mobile_ticket.traffic_light_id + mobile_ticket.user_id + date);
