@@ -127,5 +127,73 @@ namespace Server.Controllers
 
             return new SimpleResponse{error = "Заявка уже существует"};
         }
+
+        [Authorize]
+        [HttpGet("All")]
+        public async Task<ActionResult<List<TicketTrafficLight>>> GetTickets()
+        {
+            Func<TicketTrafficLight, Ticket, TicketTrafficLight> join_ticket = 
+                (l, t) => 
+                {
+                    l.ticket = t;
+                    return l;
+                };
+
+            Func<TicketTrafficLight, TrafficLight, TicketTrafficLight> join_traffic_light = 
+                (l, t) => 
+                {
+                    l.traffic_light = t;
+                    return l;
+                };
+
+            Func<TicketTrafficLight, District, TicketTrafficLight> join_district = 
+                (l, d) => 
+                {
+                    l.traffic_light.district = d;
+                    return l;
+                };
+
+            Func<TicketTrafficLight, TicketState, TicketTrafficLight> join_state = 
+                (l, s) => 
+                {
+                    l.ticket.state = s;
+                    return l;
+                };
+            
+            // не работает не пойми почему. ПРИЧИНА???
+            /*
+            return _db.ticket_traffic_lights
+                .Join(_db.tikets, l => l.ticket_id, t => t.id, join_ticket)
+                .Join(_db.traffic_lights, l => l.traffic_light_id, t => t.id, join_traffic_light)
+                .Join(_db.districts, l => l.ticket.district_id, d => d.id, join_district)
+                .ToList();
+            */
+            var ticket_traffic_lights = await _db.ticket_traffic_lights.ToListAsync();
+            var tikets = await _db.tikets.ToListAsync();
+            var ticket_states = await _db.ticket_states.ToListAsync();
+            var traffic_lights = await _db.traffic_lights.ToListAsync();
+            var districts = await _db.districts.ToListAsync();
+
+            return ticket_traffic_lights
+                .Join(tikets, l => l.ticket_id, t => t.id, join_ticket)
+                .Join(ticket_states, l => l.ticket.state_id, s => s.id, join_state)
+                .Join(traffic_lights, l => l.traffic_light_id, t => t.id, join_traffic_light)
+                .Join(districts, l => l.traffic_light.district_id, d => d.id, join_district)
+                .ToList();
+        }
+
+        [Authorize]
+        [HttpPost("Update")]
+        public async Task<ActionResult<SimpleResponse>> UpdateState(Ticket ticket)
+        {
+            Ticket ticket_db = await _db.tikets.Where(t => t.id == ticket.id).FirstOrDefaultAsync();
+            if(ticket_db != null)
+            {
+                ticket_db.state_id = ticket.state_id;
+                await _db.SaveChangesAsync();
+                return new SimpleResponse {message = "Данные обновлены удачно"};
+            }
+            return new SimpleResponse {error = "Заявка не найдена"};
+        }
     }
 }
