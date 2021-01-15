@@ -45,6 +45,8 @@ namespace Server.DataBase
 
         public DbSet<TicketTrafficLight> ticket_traffic_lights {get; set;}
         public DbSet<OtherTicket> other_tickets {get; set;}
+
+        public DbSet<WebUser> users {get; set;}
         
         public PostgreDataBase (DbContextOptions<PostgreDataBase> options)
             : base(options) 
