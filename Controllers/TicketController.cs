@@ -27,6 +27,7 @@ namespace Server.Controllers
 
         [HttpGet("Check")]
         public async Task<ActionResult<MobileResponse>> Check(string token)
+        public async Task<ActionResult<SimpleResponse>> Check(string token)
         {
             var ticket = await _db.tikets
                 .Join(
@@ -44,8 +45,10 @@ namespace Server.Controllers
             if (ticket != null)
             {
                 return new MobileResponse{message = ticket.state.name};
+                return new SimpleResponse{message = ticket.state.name};
             }
             return new MobileResponse{error = "Заявка не найдена"};
+            return new SimpleResponse{error = "Заявка не найдена"};
         }
 
 
@@ -73,6 +76,7 @@ namespace Server.Controllers
 
         [HttpPost]
         public async Task<ActionResult<MobileResponse>> New(MobileTicket mobile_ticket)
+        public async Task<ActionResult<SimpleResponse>> New(MobileTicket mobile_ticket)
         {
             var traffic_light = await _db.traffic_lights
                 .Join(
@@ -89,6 +93,7 @@ namespace Server.Controllers
             if(traffic_light == null)
             {
                 return new MobileResponse{error = "Светофор не найден"};
+                return new SimpleResponse{error = "Светофор не найден"};
             }
 
             string date = DateTime.UtcNow.ToString("yyyy-MM-dd");
@@ -98,6 +103,7 @@ namespace Server.Controllers
             if(ticket == null)
             {   
                 if(traffic_light.district == null) {return new MobileResponse{error = "Район светофора не найден"};}
+                if(traffic_light.district == null) {return new SimpleResponse{error = "Район светофора не найден"};}
 
                 Ticket new_ticket = new Ticket 
                     {
@@ -123,9 +129,11 @@ namespace Server.Controllers
 
                 await _db.SaveChangesAsync();
                 return new MobileResponse{message = token};
+                return new SimpleResponse{message = token};
             }
 
             return new MobileResponse{error = "Заявка уже существует"};
+            return new SimpleResponse{error = "Заявка уже существует"};
         }
     }
 }
