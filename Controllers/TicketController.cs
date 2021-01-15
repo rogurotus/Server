@@ -128,7 +128,7 @@ namespace Server.Controllers
             return new SimpleResponse{error = "Заявка уже существует"};
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpGet("All")]
         public async Task<ActionResult<List<TicketTrafficLight>>> GetTickets()
         {
@@ -182,7 +182,7 @@ namespace Server.Controllers
                 .ToList();
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpPost("Update")]
         public async Task<ActionResult<SimpleResponse>> UpdateState(Ticket ticket)
         {
