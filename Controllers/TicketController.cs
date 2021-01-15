@@ -11,6 +11,7 @@ using Server.DataBase;
 using System.Security.Cryptography;
 using System.Text;
 using Server.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Server.Controllers
 {
@@ -26,7 +27,6 @@ namespace Server.Controllers
         }
 
         [HttpGet("Check")]
-        public async Task<ActionResult<MobileResponse>> Check(string token)
         public async Task<ActionResult<SimpleResponse>> Check(string token)
         {
             var ticket = await _db.tikets
@@ -44,10 +44,8 @@ namespace Server.Controllers
 
             if (ticket != null)
             {
-                return new MobileResponse{message = ticket.state.name};
                 return new SimpleResponse{message = ticket.state.name};
             }
-            return new MobileResponse{error = "Заявка не найдена"};
             return new SimpleResponse{error = "Заявка не найдена"};
         }
 
@@ -75,7 +73,6 @@ namespace Server.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<MobileResponse>> New(MobileTicket mobile_ticket)
         public async Task<ActionResult<SimpleResponse>> New(MobileTicket mobile_ticket)
         {
             var traffic_light = await _db.traffic_lights
@@ -92,7 +89,6 @@ namespace Server.Controllers
                 .FirstOrDefaultAsync();
             if(traffic_light == null)
             {
-                return new MobileResponse{error = "Светофор не найден"};
                 return new SimpleResponse{error = "Светофор не найден"};
             }
 
@@ -102,14 +98,12 @@ namespace Server.Controllers
 
             if(ticket == null)
             {   
-                if(traffic_light.district == null) {return new MobileResponse{error = "Район светофора не найден"};}
                 if(traffic_light.district == null) {return new SimpleResponse{error = "Район светофора не найден"};}
 
                 Ticket new_ticket = new Ticket 
                     {
                         token = token, 
                         state = await GetTicketState("Поступила"),
-                        district = traffic_light.district,
                     };
                 await _db.tikets.AddAsync(new_ticket);
 
@@ -128,11 +122,9 @@ namespace Server.Controllers
                 );
 
                 await _db.SaveChangesAsync();
-                return new MobileResponse{message = token};
                 return new SimpleResponse{message = token};
             }
 
-            return new MobileResponse{error = "Заявка уже существует"};
             return new SimpleResponse{error = "Заявка уже существует"};
         }
     }
