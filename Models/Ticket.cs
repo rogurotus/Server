@@ -9,8 +9,6 @@ namespace Server.Models
     {
         [Key]
         public int id {get; set;}
-        
-        public string token {get; set;}
 
         public int type_id {get; set;}
 
@@ -20,7 +18,15 @@ namespace Server.Models
         public int state_id {get; set;}
         [ForeignKey("state_id")]
         public TicketState state {get; set;}
+
+        public string mobile_token {get; set;}
+
+        [ForeignKey("mobile_token")]
+        public MobileUser mobile_user {get; set;}
+
         public string description {get; set;}
+
+        public string date_add {get; set;}
 
         public List<Ticket> dublicate {get; set;}
     }
