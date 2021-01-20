@@ -56,24 +56,11 @@ namespace Server.Controllers
                 .ticket_states
                 .Where(s => s.name == name)
                 .FirstOrDefaultAsync();
-            if(state == null)
-            {
-                state = new TicketState {name = name};
-                await _db.ticket_states.AddAsync(state);
-                await _db.SaveChangesAsync();
-            }
             return state;
         }
 
-        private string hasher(string data)
-        {
-            MD5 md5 = MD5.Create();
-            byte[] hashData = md5.ComputeHash(Encoding.Default.GetBytes(data));
-            return BitConverter.ToString(hashData).Replace("-","");
-        }
-
         [HttpPost]
-        public async Task<ActionResult<SimpleResponse>> New(MobileTicket mobile_ticket)
+        public async Task<ActionResult<SimpleResponse>> New(MobileTrafficLightTicket mobile_ticket)
         {
             var traffic_light = await _db.traffic_lights
                 .Join(
@@ -92,31 +79,50 @@ namespace Server.Controllers
                 return new SimpleResponse{error = "Светофор не найден"};
             }
 
+            MobileUser user = await _db.mobile_users
+                .Where(u => u.token == mobile_ticket.user_token).FirstOrDefaultAsync();
+            if(user == null)
+            {
+                return new SimpleResponse{error = "Пользователь не найден"};
+            }
+
             string date = DateTime.UtcNow.ToString("yyyy-MM-dd");
-            string token = hasher(mobile_ticket.traffic_light_id + mobile_ticket.user_id + date);
-            Ticket ticket = await _db.tikets.Where(t => t.token == token).FirstOrDefaultAsync();
-
-            if(ticket == null)
+            int tiket_user_today = await _db.tikets
+                .Where(
+                    t => t.mobile_token == mobile_ticket.user_token &&
+                    t.date_add == date
+                ).CountAsync();
+            
+            if(tiket_user_today < 5)
             {   
-                if(traffic_light.district == null) {return new SimpleResponse{error = "Район светофора не найден"};}
-
-                Ticket new_ticket = new Ticket 
-                    {
-                        token = token, 
-                        state = await GetTicketState("Поступила"),
-                    };
-                await _db.tikets.AddAsync(new_ticket);
+                if(traffic_light.district == null) 
+                {   
+                    return new SimpleResponse{error = "Район светофора не найден"};
+                }
 
                 string desc = mobile_ticket.description;
                 if(desc == null)
                 {
                     desc = "Светофор не работает";
                 }
+
+                Ticket new_ticket = 
+                    new Ticket 
+                    {
+                        state = await GetTicketState("Поступила"),
+                        type_id = 1,
+                        description = desc,
+                        date_add = date,
+                        mobile_user = user,
+                        mobile_token = mobile_ticket.user_token,
+                    };
+
+                await _db.tikets.AddAsync(new_ticket);
+
                 await _db.ticket_traffic_lights.AddAsync(
                     new TicketTrafficLight
                     {
                         ticket_id = new_ticket.id,
-                        description = desc,
                         traffic_light_id = traffic_light.id,
                     }
                 );
@@ -124,12 +130,14 @@ namespace Server.Controllers
                 await _db.SaveChangesAsync();
                 return new SimpleResponse{message = new_ticket.id + ""};
             }
-
-            return new SimpleResponse{error = "Заявка уже существует"};
+            else
+            {
+                return new SimpleResponse{error = "Превышено кол-во заявок на сегодня"};
+            }
         }
 
-        [Authorize]
-        [HttpGet("All")]
+        //[Authorize]
+        [HttpGet("TrafficLight")]
         public async Task<ActionResult<List<TicketTrafficLight>>> GetTickets()
         {
             Func<TicketTrafficLight, Ticket, TicketTrafficLight> join_ticket = 
@@ -160,6 +168,18 @@ namespace Server.Controllers
                     return l;
                 };
             
+            Func<TicketTrafficLight, TicketType, TicketTrafficLight> join_type = 
+                (l, t) => 
+                {
+                    l.ticket.type = t;
+                    return l;
+                };
+            Func<TicketTrafficLight, MobileUser, TicketTrafficLight> join_user = 
+                (l, u) => 
+                {
+                    l.ticket.mobile_user = u;
+                    return l;
+                };
             // не работает не пойми почему. ПРИЧИНА???
             /*
             return _db.ticket_traffic_lights
@@ -168,21 +188,39 @@ namespace Server.Controllers
                 .Join(_db.districts, l => l.ticket.district_id, d => d.id, join_district)
                 .ToList();
             */
+
+            // СИЛЬНЫЙ КОСТЫЛЬ
             var ticket_traffic_lights = await _db.ticket_traffic_lights.ToListAsync();
             var tikets = await _db.tikets.ToListAsync();
             var ticket_states = await _db.ticket_states.ToListAsync();
             var traffic_lights = await _db.traffic_lights.ToListAsync();
             var districts = await _db.districts.ToListAsync();
+            var ticket_type = await _db.tiket_types.ToListAsync();
+            var mobile_user = await _db.mobile_users.ToListAsync();
+            var ticket_dublicate = await _db.ticket_dublicate.ToListAsync();
 
-            return ticket_traffic_lights
+            var tickets = ticket_traffic_lights
                 .Join(tikets, l => l.ticket_id, t => t.id, join_ticket)
                 .Join(ticket_states, l => l.ticket.state_id, s => s.id, join_state)
+                .Join(ticket_type, l => l.ticket.type_id, s => s.id, join_type)
                 .Join(traffic_lights, l => l.traffic_light_id, t => t.id, join_traffic_light)
                 .Join(districts, l => l.traffic_light.district_id, d => d.id, join_district)
+                .Join(mobile_user, l => l.ticket.mobile_token, d => d.token, join_user)
                 .ToList();
+
+            foreach(Ticket t in tikets)
+            {
+                List<Ticket> dublicates = _db.ticket_dublicate
+                    .Where(d => d.main_tiket == t.id)
+                    .Join(_db.tikets, l => l.tiket, d => d.id, (l,d) => d)
+                    .ToList();
+                t.dublicate = dublicates;
+            }
+            // КОНЕЦ СИЛЬНОГО КОСТЫЛЯ
+            return tickets;
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpPost("Update")]
         public async Task<ActionResult<SimpleResponse>> UpdateState(Ticket ticket)
         {
