@@ -12,6 +12,11 @@ namespace Server.Models
         
         public string token {get; set;}
 
+        public int type_id {get; set;}
+
+        [ForeignKey("type_id")]
+        public TicketType type {get; set;}
+
         public int state_id {get; set;}
         [ForeignKey("state_id")]
         public TicketState state {get; set;}
