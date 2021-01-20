@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Collections.Generic;
 
 namespace Server.Models
 {
@@ -14,5 +15,6 @@ namespace Server.Models
         public int state_id {get; set;}
         [ForeignKey("state_id")]
         public TicketState state {get; set;}
+        public string description {get; set;}
     }
 }

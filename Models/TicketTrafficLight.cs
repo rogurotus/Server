@@ -13,7 +13,5 @@ namespace Server.Models
         public int traffic_light_id {get;set;} 
         [ForeignKey("traffic_light_id")]
         public TrafficLight traffic_light {get; set;}
-
-        public string description {get; set;}
     }
 }
