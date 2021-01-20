@@ -21,5 +21,7 @@ namespace Server.Models
         [ForeignKey("state_id")]
         public TicketState state {get; set;}
         public string description {get; set;}
+
+        public List<Ticket> dublicate {get; set;}
     }
 }
