@@ -32,7 +32,7 @@ namespace Server.DataBase
             new TrafficLight{id = 7, long_ = 42, lat = -42, district_id = 7},
             new TrafficLight{id = 8, long_ = 42, lat = -42, district_id = 1},
             new TrafficLight{id = 9, long_ = 42, lat = -42, district_id = 2},
-            new TrafficLight{id = 10, long_ = 42, lat = -42, district_id = 3},
+            new TrafficLight{id =10, long_ = 42, lat = -42, district_id = 3},
         };
 
         public DbSet<TicketState> ticket_states {get; set;}
@@ -41,12 +41,34 @@ namespace Server.DataBase
             new TicketState{name = "Поступила"},
             new TicketState{name = "В обработке"},
             new TicketState{name = "Выполнена"},
+            new TicketState{name = "Отменена"},
+            new TicketState{name = "Дубликат"},
+        };
+
+        public DbSet<WebUser> users {get; set;}
+
+        public DbSet<TicketType> tiket_types {get; set;}
+        private List<TicketType> test_tiket_types = new List<TicketType> 
+        {
+            new TicketType{id = 1, name = "Светофор", description = "Сообщить о нерабочем светофоре"},
+            new TicketType{id = 2, name = "Граффити", description = "Сообщить о граффити в неположенном месте"},
+            new TicketType{id = 3, name = "Дорожные знаки", description = "Сообщить о нарушениях"},
+            new TicketType{id = 4, name = "Кнопки", description = "Сообщить о нерабочей кнопке"},
+        };
+
+        public DbSet<MobileUser> mobile_users {get; set;}
+        private List<MobileUser> test_mobile_user = new List<MobileUser> 
+        {
+            new MobileUser{token = "testtoken", surname = "Иванов", name = "Иван", father_name = "Иванович", phone = "79535976614"},
         };
 
         public DbSet<TicketTrafficLight> ticket_traffic_lights {get; set;}
-        public DbSet<OtherTicket> other_tickets {get; set;}
 
-        public DbSet<WebUser> users {get; set;}
+        public DbSet<TicketDuplicate> ticket_dublicate {get; set;}
+        public DbSet<Image> images {get; set;}
+        public DbSet<Photo> photos {get; set;}
+
+        // TODO db на фотки блобы и вся херня
         
         public PostgreDataBase (DbContextOptions<PostgreDataBase> options)
             : base(options) 
@@ -67,8 +89,28 @@ namespace Server.DataBase
             {
                 this.ticket_states.Add(s);
             }
-
+            foreach(var t in test_tiket_types)
+            {
+                this.tiket_types.Add(t);
+            }
+            foreach(var t in test_mobile_user)
+            {
+                this.mobile_users.Add(t);
+            }
             this.SaveChanges();
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Image>(entity =>
+            {
+                entity.Property(x => x.file).HasColumnType("bytea");
+            });
+            modelBuilder.Entity<Photo>(entity =>
+            {
+                entity.Property(x => x.file).HasColumnType("bytea");
+            });
+            modelBuilder.Entity<TicketDuplicate>().HasKey(d => new {d.main_tiket, d.tiket});
         }
     }
 }
