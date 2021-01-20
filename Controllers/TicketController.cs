@@ -27,7 +27,7 @@ namespace Server.Controllers
         }
 
         [HttpGet("Check")]
-        public async Task<ActionResult<SimpleResponse>> Check(string token)
+        public async Task<ActionResult<SimpleResponse>> Check(int token)
         {
             var ticket = await _db.tikets
                 .Join(
@@ -36,7 +36,7 @@ namespace Server.Controllers
                     s => s.id,
                     (t,s) => new
                     {
-                        token = t.token,
+                        token = t.id,
                         state = s,
                     }
                 )
@@ -122,7 +122,7 @@ namespace Server.Controllers
                 );
 
                 await _db.SaveChangesAsync();
-                return new SimpleResponse{message = token};
+                return new SimpleResponse{message = new_ticket.id + ""};
             }
 
             return new SimpleResponse{error = "Заявка уже существует"};
