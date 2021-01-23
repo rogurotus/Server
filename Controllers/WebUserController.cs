@@ -46,7 +46,7 @@ namespace Server.Controllers
                 .Where(u => u.pass == hash_pass && (u.login == user.login || u.email == user.email))
                 .FirstOrDefaultAsync();
             
-            if(user != null)
+            if(user_db != null)
             {
                 await Authenticate(user_db.email);
                 return new SimpleResponse{message = "Вход выполнен успешно"};
