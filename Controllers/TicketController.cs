@@ -161,11 +161,11 @@ namespace Server.Controllers
 
             foreach(Ticket t in tickets)
             {
-                List<Ticket> dublicates = _db.ticket_dublicate
+                List<int> dublicates = _db.ticket_dublicate
                     .Where(d => d.main_tiket == t.id)
-                    .Join(_db.tikets, l => l.tiket, d => d.id, (l,d) => d)
+                    .Select(t => t.tiket)
                     .ToList();
-                t.dublicate = dublicates;
+                t.dublicate_id = dublicates;
             }
 
             var tickets_join = tickets
@@ -185,6 +185,7 @@ namespace Server.Controllers
         [HttpPost("Update")]
         public async Task<ActionResult<SimpleResponse>> UpdateState(Ticket ticket)
         {
+            // TODO добавить каскадную обработку дубликатам  
             Ticket ticket_db = await _db.tikets.Where(t => t.id == ticket.id).FirstOrDefaultAsync();
             if(ticket_db != null)
             {

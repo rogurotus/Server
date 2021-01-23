@@ -28,6 +28,6 @@ namespace Server.Models
 
         public string date_add {get; set;}
 
-        public List<Ticket> dublicate {get; set;}
+        public List<int> dublicate_id {get; set;}
     }
 }
