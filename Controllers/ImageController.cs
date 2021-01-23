@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using System.IO;
 using Microsoft.AspNetCore.Http;
 
+
 namespace Server.Controllers
 {
     [ApiController]
@@ -30,23 +31,33 @@ namespace Server.Controllers
             _db = db;
         }
 
-        [HttpPost]
-        public async Task<SimpleResponse> Post(IFormFile file)
+        [HttpPost("{name}")]
+        public async Task<SimpleResponse> Post(IFormFile file, string name)
         {
+            Image image_bd = await _db.images.Where(i => i.name == name).FirstOrDefaultAsync();
+            if (image_bd != null)
+            {
+                return new SimpleResponse{error = "Такая картинка уже есть"};
+            }
             Image image = new Image();
+            image.name = name;
             using (var binaryReader = new BinaryReader(file.OpenReadStream()))
             {
                 image.file = binaryReader.ReadBytes((int)file.Length);
             }
             await _db.images.AddAsync(image);
             await _db.SaveChangesAsync();
-            return new SimpleResponse{message = "" + image.id};
+            return new SimpleResponse{message = name};
         }
 
-        [HttpGet]
-        public async Task<ActionResult> GetImage(int id)
+        [HttpGet("{name}")]
+        public async Task<ActionResult> GetImage(string name)
         {
-            Image file = await _db.images.Where(i => i.id == id).FirstOrDefaultAsync();
+            Image file = await _db.images.Where(i => i.name == name).FirstOrDefaultAsync();
+            if (file == null)
+            {
+                return Content("404 image not foud");
+            }
             return File(file.file, "image/jpeg");
         }
     }

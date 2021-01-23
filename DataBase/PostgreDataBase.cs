@@ -50,10 +50,10 @@ namespace Server.DataBase
         public DbSet<TicketType> tiket_types {get; set;}
         private List<TicketType> test_tiket_types = new List<TicketType> 
         {
-            new TicketType{id = 1, name = "Светофор", description = "Сообщить о нерабочем светофоре"},
-            new TicketType{id = 2, name = "Граффити", description = "Сообщить о граффити в неположенном месте"},
-            new TicketType{id = 3, name = "Дорожные знаки", description = "Сообщить о нарушениях"},
-            new TicketType{id = 4, name = "Кнопки", description = "Сообщить о нерабочей кнопке"},
+            new TicketType{id = 1, name = "Светофор", description = "Сообщить о нерабочем светофоре", url = "/Image/test1.jpg"},
+            new TicketType{id = 2, name = "Граффити", description = "Сообщить о граффити в неположенном месте", url = "/Image/test2.jpg"},
+            new TicketType{id = 3, name = "Дорожные знаки", description = "Сообщить о нарушениях", url = "/Image/test3.jpg"},
+            new TicketType{id = 4, name = "Кнопки", description = "Сообщить о нерабочей кнопке", url = "/Image/test4.jpg"},
         };
 
         public DbSet<MobileUser> mobile_users {get; set;}

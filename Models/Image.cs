@@ -8,7 +8,7 @@ namespace Server.Models
     public class Image
     {
         [Key]
-        public int id {get; set;}
+        public string name {get; set;}
 
         public byte[] file { get; set; }
 

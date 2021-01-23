@@ -14,7 +14,7 @@ namespace Server.Models
 
         public string description {get; set;}
 
-        public int image_id {get; set;}
+        public string url {get; set;}
 
     }
 }
