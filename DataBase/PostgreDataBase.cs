@@ -3,6 +3,8 @@ using Server.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Server.DataBase
 {
@@ -48,6 +50,15 @@ namespace Server.DataBase
                 l.mobile_user = u;
                 return l;
             };
+
+        public static string hasher(string data)
+        {
+            string salt = "НУ СОЛЬ ТАКАЯ НОРМАЛЬНАЯ";
+            data = data + salt;
+            SHA256 sha = SHA256.Create();
+            byte[] hashData = sha.ComputeHash(Encoding.Default.GetBytes(data));
+            return BitConverter.ToString(hashData).Replace("-","");
+        }
         public DbSet<District> districts {get; set;}
         private static List<District> test_district = new List<District> 
         {
@@ -64,16 +75,16 @@ namespace Server.DataBase
         public DbSet<TrafficLight> traffic_lights {get; set;}
         private List<TrafficLight> test_light = new List<TrafficLight> 
         {
-            new TrafficLight{id = 1, long_ = 42, lat = -42, district_id = 1},
-            new TrafficLight{id = 2, long_ = 42, lat = -42, district_id = 2},
-            new TrafficLight{id = 3, long_ = 42, lat = -42, district_id = 3},
-            new TrafficLight{id = 4, long_ = 42, lat = -42, district_id = 4},
-            new TrafficLight{id = 5, long_ = 42, lat = -42, district_id = 5},
-            new TrafficLight{id = 6, long_ = 42, lat = -42, district_id = 6},
-            new TrafficLight{id = 7, long_ = 42, lat = -42, district_id = 7},
-            new TrafficLight{id = 8, long_ = 42, lat = -42, district_id = 1},
-            new TrafficLight{id = 9, long_ = 42, lat = -42, district_id = 2},
-            new TrafficLight{id =10, long_ = 42, lat = -42, district_id = 3},
+            new TrafficLight{id = 1, long_ = 42, lat = -42, district_id = 1, hash_code = PostgreDataBase.hasher(1 + "")},
+            new TrafficLight{id = 2, long_ = 42, lat = -42, district_id = 2, hash_code = PostgreDataBase.hasher(2 + "")},
+            new TrafficLight{id = 3, long_ = 42, lat = -42, district_id = 3, hash_code = PostgreDataBase.hasher(3 + "")},
+            new TrafficLight{id = 4, long_ = 42, lat = -42, district_id = 4, hash_code = PostgreDataBase.hasher(4 + "")},
+            new TrafficLight{id = 5, long_ = 42, lat = -42, district_id = 5, hash_code = PostgreDataBase.hasher(5 + "")},
+            new TrafficLight{id = 6, long_ = 42, lat = -42, district_id = 6, hash_code = PostgreDataBase.hasher(6 + "")},
+            new TrafficLight{id = 7, long_ = 42, lat = -42, district_id = 7, hash_code = PostgreDataBase.hasher(7 + "")},
+            new TrafficLight{id = 8, long_ = 42, lat = -42, district_id = 1, hash_code = PostgreDataBase.hasher(8 + "")},
+            new TrafficLight{id = 9, long_ = 42, lat = -42, district_id = 2, hash_code = PostgreDataBase.hasher(9 + "")},
+            new TrafficLight{id =10, long_ = 42, lat = -42, district_id = 3, hash_code = PostgreDataBase.hasher(10 + "")},
         };
 
         public DbSet<TicketState> ticket_states {get; set;}

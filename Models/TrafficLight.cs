@@ -9,6 +9,8 @@ namespace Server.Models
         [Key]
         public int id {get; set;}
 
+        public string hash_code {get; set;}
+
         [Column("long")]
         public float long_ {get; set;}
 

@@ -8,8 +8,6 @@ using Microsoft.Extensions.Logging;
 using Docker.Models;
 using Microsoft.EntityFrameworkCore;
 using Server.DataBase;
-using System.Security.Cryptography;
-using System.Text;
 using Server.Models;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
@@ -28,19 +26,10 @@ namespace Server.Controllers
             _db = db;
         }
 
-        private string hasher(string data)
-        {
-            string salt = "НУ СОЛЬ ТАКАЯ НОРМАЛЬНАЯ";
-            data = data + salt;
-            SHA256 sha = SHA256.Create();
-            byte[] hashData = sha.ComputeHash(Encoding.Default.GetBytes(data));
-            return BitConverter.ToString(hashData).Replace("-","");
-        }
-
         [HttpPost("Login")]
         public async Task<ActionResult<SimpleResponse>> Login(WebUser user)
         {
-            string hash_pass = hasher(user.pass);
+            string hash_pass = PostgreDataBase.hasher(user.pass);
             WebUser user_db = await 
                 _db.users
                 .Where(u => u.pass == hash_pass && (u.login == user.login || u.email == user.email))
@@ -57,7 +46,7 @@ namespace Server.Controllers
         [HttpPost("Create")]
         public async Task<ActionResult<SimpleResponse>> CreateAccount(WebUser user)
         {
-            string hash_pass = hasher(user.pass);
+            string hash_pass = PostgreDataBase.hasher(user.pass);
             WebUser user_db = await 
                 _db.users
                 .Where(u => u.login == user.login || u.email == user.email)

@@ -4,7 +4,7 @@ namespace Server.Models
 {
     public class MobileTrafficLightTicket
     {
-        public int traffic_light_id {get; set;}
+        public string traffic_light_hash_code {get; set;}
         public string user_token {get; set;}
         public string description {get;set;}
     }

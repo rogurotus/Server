@@ -62,22 +62,19 @@ namespace Server.Controllers
         [HttpPost]
         public async Task<ActionResult<SimpleResponse>> New(MobileTrafficLightTicket mobile_ticket)
         {
+            
             var traffic_light = await _db.traffic_lights
-                .Join(
-                    _db.districts, 
-                    t => t.district_id, 
-                    d => d.id, 
-                    (t,d) => new
-                    {
-                        id = t.id,
-                        district = d,
-                    })
-                .Where(t => t.id == mobile_ticket.traffic_light_id)
+                .Where(t => t.hash_code == mobile_ticket.traffic_light_hash_code)
                 .FirstOrDefaultAsync();
             if(traffic_light == null)
             {
                 return new SimpleResponse{error = "Светофор не найден"};
             }
+
+            // Костыль заджоинил район
+            var _district = await _db.districts
+                .Where(d => d.id == traffic_light.district_id).FirstOrDefaultAsync();
+            traffic_light.district = _district;
 
             MobileUser user = await _db.mobile_users
                 .Where(u => u.token == mobile_ticket.user_token).FirstOrDefaultAsync();
