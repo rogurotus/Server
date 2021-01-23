@@ -2,11 +2,52 @@ using Microsoft.EntityFrameworkCore;
 using Server.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace Server.DataBase
 {
     public class PostgreDataBase : DbContext
     {
+        public static Func<TicketTrafficLight, Ticket, TicketTrafficLight> join_ticket = 
+            (l, t) => 
+            {
+                l.ticket = t;
+                return l;
+            };
+
+        public static Func<TicketTrafficLight, TrafficLight, TicketTrafficLight> join_traffic_light = 
+            (l, t) => 
+            {
+                l.traffic_light = t;
+                return l;
+            };
+
+        public static Func<TrafficLight, District, TrafficLight> join_district = 
+            (l, d) => 
+            {
+                l.district = d;
+                return l;
+            };
+
+        public static Func<Ticket, TicketState, Ticket> join_state = 
+            (l, s) => 
+            {
+                l.state = s;
+                return l;
+            };
+            
+        public static Func<Ticket, TicketType, Ticket> join_type = 
+            (l, t) => 
+            {
+                l.type = t;
+                return l;
+            };
+        public static Func<Ticket, MobileUser, Ticket> join_user = 
+            (l, u) => 
+            {
+                l.mobile_user = u;
+                return l;
+            };
         public DbSet<District> districts {get; set;}
         private static List<District> test_district = new List<District> 
         {

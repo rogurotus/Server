@@ -140,46 +140,6 @@ namespace Server.Controllers
         [HttpGet("TrafficLight")]
         public async Task<ActionResult<List<TicketTrafficLight>>> GetTickets()
         {
-            Func<TicketTrafficLight, Ticket, TicketTrafficLight> join_ticket = 
-                (l, t) => 
-                {
-                    l.ticket = t;
-                    return l;
-                };
-
-            Func<TicketTrafficLight, TrafficLight, TicketTrafficLight> join_traffic_light = 
-                (l, t) => 
-                {
-                    l.traffic_light = t;
-                    return l;
-                };
-
-            Func<TicketTrafficLight, District, TicketTrafficLight> join_district = 
-                (l, d) => 
-                {
-                    l.traffic_light.district = d;
-                    return l;
-                };
-
-            Func<TicketTrafficLight, TicketState, TicketTrafficLight> join_state = 
-                (l, s) => 
-                {
-                    l.ticket.state = s;
-                    return l;
-                };
-            
-            Func<TicketTrafficLight, TicketType, TicketTrafficLight> join_type = 
-                (l, t) => 
-                {
-                    l.ticket.type = t;
-                    return l;
-                };
-            Func<TicketTrafficLight, MobileUser, TicketTrafficLight> join_user = 
-                (l, u) => 
-                {
-                    l.ticket.mobile_user = u;
-                    return l;
-                };
             // не работает не пойми почему. ПРИЧИНА???
             /*
             return _db.ticket_traffic_lights
@@ -191,24 +151,18 @@ namespace Server.Controllers
 
             // СИЛЬНЫЙ КОСТЫЛЬ
             var ticket_traffic_lights = await _db.ticket_traffic_lights.ToListAsync();
-            var tikets = await _db.tikets.ToListAsync();
+            var tickets = await _db.tikets.ToListAsync();
             var ticket_states = await _db.ticket_states.ToListAsync();
             var traffic_lights = await _db.traffic_lights.ToListAsync();
             var districts = await _db.districts.ToListAsync();
             var ticket_type = await _db.tiket_types.ToListAsync();
             var mobile_user = await _db.mobile_users.ToListAsync();
             var ticket_dublicate = await _db.ticket_dublicate.ToListAsync();
+            
+            var traffic_light_join = traffic_lights
+                .Join(districts, tr => tr.district_id, d => d.id, PostgreDataBase.join_district);
 
-            var tickets = ticket_traffic_lights
-                .Join(tikets, l => l.ticket_id, t => t.id, join_ticket)
-                .Join(ticket_states, l => l.ticket.state_id, s => s.id, join_state)
-                .Join(ticket_type, l => l.ticket.type_id, s => s.id, join_type)
-                .Join(traffic_lights, l => l.traffic_light_id, t => t.id, join_traffic_light)
-                .Join(districts, l => l.traffic_light.district_id, d => d.id, join_district)
-                .Join(mobile_user, l => l.ticket.mobile_token, d => d.token, join_user)
-                .ToList();
-
-            foreach(Ticket t in tikets)
+            foreach(Ticket t in tickets)
             {
                 List<Ticket> dublicates = _db.ticket_dublicate
                     .Where(d => d.main_tiket == t.id)
@@ -216,8 +170,18 @@ namespace Server.Controllers
                     .ToList();
                 t.dublicate = dublicates;
             }
+
+            var tickets_join = tickets
+                .Join(ticket_type, t => t.type_id, ty => ty.id, PostgreDataBase.join_type)
+                .Join(ticket_states, t => t.state_id, st => st.id, PostgreDataBase.join_state)
+                .Join(mobile_user, t => t.mobile_token, m => m.token, PostgreDataBase.join_user);
+
+            var tickets_res = ticket_traffic_lights
+                .Join(tickets_join, l => l.ticket_id, t => t.id, PostgreDataBase.join_ticket)
+                .Join(traffic_lights, l => l.traffic_light_id, t => t.id, PostgreDataBase.join_traffic_light)
+                .ToList();
             // КОНЕЦ СИЛЬНОГО КОСТЫЛЯ
-            return tickets;
+            return tickets_res;
         }
 
         //[Authorize]
