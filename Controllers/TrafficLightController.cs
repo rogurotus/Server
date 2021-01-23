@@ -29,9 +29,11 @@ namespace Server.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<TrafficLight>>> GetTrafficLight()
+        public ActionResult<List<TrafficLight>> GetTrafficLight()
         {
-            return await _db.traffic_lights.ToListAsync();
+            var traffic_lights = _db.traffic_lights.ToList();
+            return traffic_lights
+                .Join(_db.districts, t => t.district_id, d => d.id, PostgreDataBase.join_district).ToList();
         }
     }
 }

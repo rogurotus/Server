@@ -28,7 +28,6 @@ namespace Server.Controllers
             _db = db;
         }
 
-
         [HttpGet]
         public async Task<ActionResult<List<TicketType>>> GetTypes()
         {
