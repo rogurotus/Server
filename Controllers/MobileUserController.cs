@@ -54,7 +54,7 @@ namespace Server.Controllers
                 return new SimpleResponse{message = token};
             }
             // для тестов пока токен
-            return new SimpleResponse{error = token};
+            return new SimpleResponse{error = user_db.token};
         }
     }
 }
