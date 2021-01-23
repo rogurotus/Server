@@ -74,6 +74,9 @@ namespace Docker
             app.UseAuthentication();  
             app.UseAuthorization();   
 
+            //ALARM CORS ACCEPT
+            app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
