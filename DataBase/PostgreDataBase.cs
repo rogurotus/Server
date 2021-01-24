@@ -94,7 +94,6 @@ namespace Server.DataBase
             new TicketState{name = "В обработке"},
             new TicketState{name = "Выполнена"},
             new TicketState{name = "Отменена"},
-            new TicketState{name = "Дубликат"},
         };
 
         public DbSet<WebUser> users {get; set;}
@@ -111,7 +110,11 @@ namespace Server.DataBase
         public DbSet<MobileUser> mobile_users {get; set;}
         private List<MobileUser> test_mobile_user = new List<MobileUser> 
         {
-            new MobileUser{token = "testtoken", surname = "Иванов", name = "Иван", father_name = "Иванович", phone = "79535976614"},
+            new MobileUser{token = "testtoken1", surname = "Иванов1", name = "Иван1", father_name = "Иванович1", phone = "79535976614"},
+            new MobileUser{token = "testtoken2", surname = "Иванов2", name = "Иван2", father_name = "Иванович2", phone = "79535976615"},
+            new MobileUser{token = "testtoken3", surname = "Иванов3", name = "Иван3", father_name = "Иванович3", phone = "79535976616"},
+            new MobileUser{token = "testtoken4", surname = "Иванов4", name = "Иван4", father_name = "Иванович4", phone = "79535976617"},
+            new MobileUser{token = "testtoken5", surname = "Иванов5", name = "Иван5", father_name = "Иванович5", phone = "79535976618"},
         };
 
         public DbSet<TicketTrafficLight> ticket_traffic_lights {get; set;}
