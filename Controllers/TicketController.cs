@@ -194,5 +194,13 @@ namespace Server.Controllers
             }
             return new SimpleResponse {error = "Заявка не найдена"};
         }
+
+        [HttpGet("Photos")]
+        public async Task<ActionResult<List<int>>> GetPhotosTicket(int id)
+        {
+            List<int> photos = await _db.photos
+                .Where(p => p.ticket == id).Select(p => p.id).ToListAsync();
+            return photos;
+        }
     }
 }
