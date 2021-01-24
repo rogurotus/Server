@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Docker.Models;
 using Microsoft.EntityFrameworkCore;
 using Server.DataBase;
 using System.Security.Cryptography;
@@ -16,6 +15,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.IO;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace Server.Controllers
@@ -31,6 +31,7 @@ namespace Server.Controllers
             _db = db;
         }
 
+        //[Authorize]
         [HttpPost("{name}")]
         public async Task<SimpleResponse> Post(IFormFile file, string name)
         {
@@ -56,7 +57,7 @@ namespace Server.Controllers
             Image file = await _db.images.Where(i => i.name == name).FirstOrDefaultAsync();
             if (file == null)
             {
-                return Content("404 image not foud");
+                return Content("Картинка не найдена");
             }
             return File(file.file, "image/jpeg");
         }

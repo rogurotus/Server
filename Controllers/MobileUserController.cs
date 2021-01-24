@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Docker.Models;
 using Microsoft.EntityFrameworkCore;
 using Server.DataBase;
 using System.Security.Cryptography;
@@ -28,15 +27,6 @@ namespace Server.Controllers
             _db = db;
         }
 
-        private string hasher(string data)
-        {
-            string salt = "НУ СОЛЬ ТАКАЯ НОРМАЛЬНАЯ";
-            data = data + salt;
-            SHA256 sha = SHA256.Create();
-            byte[] hashData = sha.ComputeHash(Encoding.Default.GetBytes(data));
-            return BitConverter.ToString(hashData).Replace("-","");
-        }
-
         [HttpPost("Create")]
         public async Task<ActionResult<SimpleResponse>> CreateAccount(MobileUser user)
         {
@@ -44,7 +34,7 @@ namespace Server.Controllers
                 _db.mobile_users
                 .Where(u => u.phone == user.phone)
                 .FirstOrDefaultAsync();
-            string token = hasher(user.phone);
+            string token = PostgreDataBase.hasher(user.phone);
 
             if(user_db == null)
             {
