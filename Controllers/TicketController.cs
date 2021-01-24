@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Docker.Models;
 using Microsoft.EntityFrameworkCore;
 using Server.DataBase;
 using System.Security.Cryptography;
@@ -59,8 +58,8 @@ namespace Server.Controllers
             return state;
         }
 
-        [HttpPost]
-        public async Task<ActionResult<SimpleResponse>> New(MobileTrafficLightTicket mobile_ticket)
+        [HttpPost("QR")]
+        public async Task<ActionResult<SimpleResponse>> QRNew(TrafficLightTicketRequest mobile_ticket)
         {
             
             var traffic_light = await _db.traffic_lights
@@ -161,11 +160,11 @@ namespace Server.Controllers
 
             foreach(Ticket t in tickets)
             {
-                List<int> dublicates = _db.ticket_dublicate
+                List<int> dublicates = await _db.ticket_dublicate
                     .Where(d => d.main_tiket == t.id)
                     .Select(t => t.tiket)
-                    .ToList();
-                t.dublicate_id = dublicates;
+                    .ToListAsync();
+                t.dublicates_id = dublicates;
             }
 
             var tickets_join = tickets
@@ -185,8 +184,8 @@ namespace Server.Controllers
         [HttpPost("Update")]
         public async Task<ActionResult<SimpleResponse>> UpdateState(Ticket ticket)
         {
-            // TODO добавить каскадную обработку дубликатам  
-            Ticket ticket_db = await _db.tikets.Where(t => t.id == ticket.id).FirstOrDefaultAsync();
+            Ticket ticket_db = await _db.tikets
+                .Where(t => t.id == ticket.id).FirstOrDefaultAsync();
             if(ticket_db != null)
             {
                 ticket_db.state_id = ticket.state_id;

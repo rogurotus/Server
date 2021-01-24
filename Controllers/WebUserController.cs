@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Docker.Models;
 using Microsoft.EntityFrameworkCore;
 using Server.DataBase;
 using Server.Models;
