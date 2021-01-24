@@ -189,6 +189,17 @@ namespace Server.Controllers
             if(ticket_db != null)
             {
                 ticket_db.state_id = ticket.state_id;
+
+                List<Ticket> dublicates = await _db.ticket_dublicate
+                    .Where(d => d.main_tiket == ticket.id)
+                    .Join(_db.tikets, d => d.tiket, t => t.id,
+                    (d,t) => t).ToListAsync();
+
+                foreach(Ticket t in dublicates)
+                {
+                    t.state_id = ticket.state_id;
+                }
+
                 await _db.SaveChangesAsync();
                 return new SimpleResponse {message = "Данные обновлены удачно"};
             }
