@@ -19,5 +19,7 @@ namespace Server.Models
         public int district_id {get; set;}
         [ForeignKey("district_id")]
         public District district {get; set;}
+
+        public string description {get; set;}
     }
 }
