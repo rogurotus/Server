@@ -2,10 +2,11 @@ using System.Collections.Generic;
 
 namespace Server.Models
 {
-    public class TrafficLightTicketRequest
+    public class CustomTrafficLightTicket
     {
-        public string traffic_light_hash_code {get; set;}
         public string user_token {get; set;}
         public string description {get;set;}
+        public float long_ {get; set;}
+        public float lat {get; set;}
     }
 }
