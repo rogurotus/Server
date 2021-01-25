@@ -49,6 +49,15 @@ namespace Server.Controllers
                 return new SimpleResponse{error = "Заявка не найдена"};
             }
 
+            int count = await _db.photos
+                .Where(p => p.ticket == request.ticket_id)
+                .CountAsync();
+            
+            if(count >= 5)
+            {
+                return new SimpleResponse{error = "Превышен лимит заявок"};
+            }
+
             Photo photo = new Photo();
             photo.ticket = request.ticket_id;
             using (var binaryReader = new BinaryReader(request.photo.OpenReadStream()))
