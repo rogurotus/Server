@@ -1,34 +1,58 @@
 import React from "react";
-import {NavLink} from "react-router-dom";
-import "./ForgotPasswordPage.css";
-const ForgotPasswordPage=(props)=>{
-    return(
-        <div className={props.state.PageForPas.ClassForPas[0].name}>
-            <div className={props.state.PageForPas.ClassForPas[1].name}>
-                <div className={props.state.PageForPas.ClassForPas[2].name}>
-                    {props.state.PageForPas.NamesForPas[0].name}
-                </div>
-                <div className={props.state.PageForPas.ClassForPas[3].name}>
-                    {props.state.PageForPas.NamesForPas[1].name}
-                </div>
-                <div className={props.state.PageForPas.ClassForPas[4].name}>
-                    <div className={props.state.PageForPas.ClassForPas[5].name}>
-                        {props.state.PageForPas.NamesForPas[2].name}
+import {withRouter} from "react-router-dom";
+import s from "./ForgotPasswordPage.module.css";
+import Navbar from "../../navbar/Navbar";
+
+class ForgotPasswordPage extends React.Component {
+    onEmailChange = (e) => {
+        let emailText = e.target.value;
+        this.props.UpdateEmailForgot(emailText);
+    };
+    ClickCancel = () => {
+        const {history} = this.props;
+        this.props.OnClickReturn(history);
+    }
+    ClickSend = () => {
+        const {history} = this.props;
+        this.props.OnClickSend(history);
+    }
+
+    render() {
+        return (
+            <div>
+                <Navbar links={this.props.links[this.props.link_id].links}
+                        buttonVisible={false} user={""}
+                />
+                <div className={s.ForgotPage}>
+                    <div className={s.ForgotContent}>
+                        <div className={s.NameForgot}>
+                            {this.props.NamePage}
+                        </div>
+                        <div className={s.TextForgot}>
+                            {this.props.NameInfo}
+                        </div>
+                        <div className={s.ForgotForInput}>
+                            <div className={s.ForgotNameInput}>
+                                {this.props.NameInput}
+                            </div>
+                            <div className={s.ForgotDivInput}>
+                                <input onChange={this.onEmailChange}
+                                       value={this.props.valueEmailForgot}
+                                       type={this.props.type}
+                                       className={s.ForgotInput}/>
+                            </div>
+                        </div>
+                        <div className={s.ForgotNavLink}>
+                            <button className={s.ForgotCancelLink} onClick={this.ClickCancel}>
+                                {this.props.NameForgotCancel}</button>
+                            <button className={s.ForgotLink} onClick={this.ClickSend}>
+                                {this.props.NameSend}</button>
+                        </div>
                     </div>
-                    <div className={props.state.PageForPas.ClassForPas[6].name}>
-                        <input type={props.state.Type} className={props.state.PageForPas.ClassForPas[7].name}/>
-                    </div>
-                </div>
-                <div className={props.state.PageForPas.ClassForPas[8].name}>
-                    <NavLink to={props.state.PageForPas.LinksForPas[0].links}
-                             className={props.state.PageForPas.ClassForPas[9].name}>
-                        {props.state.PageForPas.NamesForPas[3].name}</NavLink>
-                    <NavLink to={props.state.PageForPas.LinksForPas[0].links}
-                             className={props.state.PageForPas.ClassForPas[10].name}>
-                        {props.state.PageForPas.NamesForPas[4].name}</NavLink>
                 </div>
             </div>
-        </div>
-    );
+        );
+    }
 }
-export default ForgotPasswordPage;
+
+export default withRouter(ForgotPasswordPage);

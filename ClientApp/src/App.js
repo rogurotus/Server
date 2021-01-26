@@ -1,46 +1,49 @@
-import './App.css';
+import s from './App.module.css';
 import React from "react";
 import {BrowserRouter, Redirect, Route} from "react-router-dom";
+/*import logo from "./logo.png";*/
+import EntranceContainer from "./AuthorizationPage/Entrance/EnteranceContainer";
+import RegistrationContainer from "./AuthorizationPage/Registration/RegContainer";
+import ForgotContainer from "./AuthorizationPage/ForgotPassword/ForgotContainer";
+import TicketInfoContainer from "./Ticket/TicketInfoPage/TicketInfoContainer";
+import TicketPageContainer from "./Ticket/TicketPage/TicketPageContainer";
 
-import ForgotPasswordPage from "./AuthorizationPage/ForgotPassword/ForgotPasswordPage";
-import Tickets from "./tickets/Tickets";
-import logo from "./logo.png";
-import Entrance from "./AuthorizationPage/Entrance/Entrance";
-import Registration from "./AuthorizationPage/Registration/Registration";
-const App=(props)=> {
-    return (
-        <BrowserRouter>
-            <div className={props.state.ForApp.ClassNameApp[0].name}>
-                <header className={props.state.ForApp.ClassNameApp[1].name}>
-                    {/*<img src={logo} className={props.state.ForApp.ClassNameApp[2].name} alt=""/>*/}LOGO
-                </header>
-                <div className={props.state.ForApp.ClassNameApp[3].name}>
+class App extends React.Component {
+    link = "/";
+    linkAutho = "/Authorization";
+    linkEnt = "/Authorization/Entrance";
+    linkReg = "/Authorization/Registration";
+    linkPageTicket = "/TicketPage";
+    linkPageTicketInfo = "/TicketInfoPage";
+    linkForgot = "/Authorization/ForgotPassword";
+
+    render() {
+        return (
+            <BrowserRouter>
+                <div className={s.App}>
+                    <header className={s.App_header}>
+                        {/*<img src={logo} className={s.App_logo} alt=""/>*/}
+                    </header>
+                    <div className={s.App_Content}>
+                        <Route exact path={this.link} render={() => <Redirect to={this.linkEnt}/>}/>
+
+                        <Route exact path={this.linkAutho} render={() => <Redirect to={this.linkEnt}/>}/>
+
+                        <Route path={this.linkEnt} render={() => <EntranceContainer/>}/>
+
+                        <Route path={this.linkReg} render={() => <RegistrationContainer/>}/>
+
+                        <Route path={this.linkForgot} render={() => <ForgotContainer/>}/>
+
+                        <Route path={this.linkPageTicket} render={() => <TicketPageContainer/>}/>
+
+                        <Route path={this.linkPageTicketInfo} render={() => <TicketInfoContainer/>}/>
+                    </div>
 
                 </div>
-                <div className={props.state.ForApp.ClassNameApp[4].name}>
-                    <Route exact path={props.state.ForApp.LinksApp[0].links}
-                           render={()=><Redirect to={props.state.ForApp.LinksApp[2].links}/>} />
-                    <Route exact path={props.state.ForApp.LinksApp[1].links}
-                           render={()=><Redirect to={props.state.ForApp.LinksApp[2].links}/>} />
-                    <Route path={props.state.ForApp.LinksApp[2].links}
-                           render={()=><Entrance state={props.state}
-                                                 dispatch={props.dispatch}
-                           />}/>
-                    <Route path={props.state.ForApp.LinksApp[3].links}
-                           render={()=><Registration state={props.state}
-                                                     dispatch={props.dispatch}
-                           />}/>
-                    <Route path="/Tickets"
-                           render={()=><Tickets state={props.state}
-                                                dispatch={props.dispatch}
-                           />} />
-                    <Route path={props.state.ForApp.LinksApp[5].links}
-                           render={()=><ForgotPasswordPage state={props.state}/>} />
-                </div>
-
-            </div>
-      </BrowserRouter>
-  );
+            </BrowserRouter>
+        );
+    }
 }
 
 export default App;
