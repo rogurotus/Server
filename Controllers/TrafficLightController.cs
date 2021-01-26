@@ -32,7 +32,12 @@ namespace Server.Controllers
         {
             var traffic_lights = _db.traffic_lights.ToList();
             return traffic_lights
-                .Join(_db.districts, t => t.district_id, d => d.id, PostgreDataBase.join_district).ToList();
+                .Join(
+                    _db.districts, 
+                    t => t.district_id, 
+                    d => d.id, 
+                    PostgreDataBase.join_district
+                ).ToList();
         }
     }
 }

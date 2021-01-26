@@ -81,10 +81,10 @@ namespace Server.Controllers
         }
  
         [HttpPost("Logout")]
-        public async Task<IActionResult> Logout()
+        public async Task<ActionResult<SimpleResponse>> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return Redirect("/Authorization/Entrance");
+            return new SimpleResponse{message = "Выход выполнен"};
         }
     }
 }

@@ -26,7 +26,7 @@ namespace Server.Controllers
         }
 
         [HttpGet("Check")]
-        public async Task<ActionResult<SimpleResponse>> Check(int token)
+        public async Task<ActionResult<SimpleResponse>> Check(int ticket_id)
         {
             var ticket = await _db.tikets
                 .Join(
@@ -35,11 +35,11 @@ namespace Server.Controllers
                     s => s.id,
                     (t,s) => new
                     {
-                        token = t.id,
+                        ticket_id = t.id,
                         state = s,
                     }
                 )
-                .Where(t => t.token == token).FirstOrDefaultAsync();
+                .Where(t => t.ticket_id == ticket_id).FirstOrDefaultAsync();
 
             if (ticket != null)
             {
