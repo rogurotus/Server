@@ -16,7 +16,7 @@ let InitialState = {
         {id: 5, name: "Email"},
         {id: 6, name: "Отмена"},
         {id: 7, name: "Зарегистрировать"}
-    ],link_id:2,
+    ], link_id: 2,
     LinksReg: [
         {id: 0, links: "/Authorization/Entrance"},
         {id: 1, links: "/TicketPage"},
@@ -32,7 +32,7 @@ const RegistrationReducer = (state = InitialState, action) => {
         case onClickButtonRegActionType: {
             let stateCopy = {...state};
             let emailValid = stateCopy.Email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
-            if((stateCopy.Password===stateCopy.PassRep)&&(stateCopy.Login!=="")&&(stateCopy.Email!=="")&&(emailValid)){
+            if ((stateCopy.Password === stateCopy.PassRep) && (stateCopy.Login !== "") && (stateCopy.Email !== "") && (emailValid)) {
                 let data = {
                     login: stateCopy.Login,
                     pass: stateCopy.Password,
@@ -49,8 +49,9 @@ const RegistrationReducer = (state = InitialState, action) => {
                             }
                         }
                     );
+            } else {
+                alert("Ошибка заполнения полей")
             }
-            else {alert("Ошибка заполнения полей")}
             stateCopy.Login = "";
             stateCopy.Password = "";
             stateCopy.PasswordText = "";

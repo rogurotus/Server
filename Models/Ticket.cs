@@ -31,8 +31,8 @@ namespace Server.Models
         public List<int> dublicates_id {get; set;}
 
         [Column("long")]
-        public float long_ {get; set;}
+        public double long_ {get; set;}
 
-        public float lat {get; set;}
+        public double lat {get; set;}
     }
 }

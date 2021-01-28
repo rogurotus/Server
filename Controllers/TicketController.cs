@@ -48,7 +48,7 @@ namespace Server.Controllers
             return new SimpleResponse{error = "Заявка не найдена"};
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpGet("TrafficLight")]
         public async Task<ActionResult<List<TicketTrafficLight>>> GetTickets()
         {
@@ -96,7 +96,7 @@ namespace Server.Controllers
             return tickets_res;
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpPost("Update")]
         public async Task<ActionResult<SimpleResponse>> UpdateState(Ticket ticket)
         {
@@ -104,6 +104,23 @@ namespace Server.Controllers
                 .Where(t => t.id == ticket.id).FirstOrDefaultAsync();
             if(ticket_db != null)
             {
+                if(ticket.state_id == ticket_db.state_id)
+                {
+                    return new SimpleResponse {error = "Заявка уже в этом состоянии"};
+                }
+
+                DateTime date_time = DateTime.Now;
+                date_time = date_time.AddHours(7);
+                string date = date_time.ToString("yyyy-MM-dd HH:mm:ss");
+                await _db.ticket_historys.AddAsync(
+                    new TicketHistory
+                    {
+                        ticket_id = ticket.id,
+                        ticket_state_old_id = ticket_db.state_id,
+                        ticket_state_new_id = ticket.state_id,
+                        date = date,
+                    });
+
                 ticket_db.state_id = ticket.state_id;
 
                 List<Ticket> dublicates = await _db.ticket_dublicate
@@ -113,6 +130,14 @@ namespace Server.Controllers
 
                 foreach(Ticket t in dublicates)
                 {
+                    await _db.ticket_historys.AddAsync(
+                    new TicketHistory
+                    {
+                        ticket_id = t.id,
+                        ticket_state_old_id = t.state_id,
+                        ticket_state_new_id = ticket.state_id,
+                        date = date,
+                    });
                     t.state_id = ticket.state_id;
                 }
 

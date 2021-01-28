@@ -69,7 +69,7 @@ namespace Server.Controllers
             return new SimpleResponse{message = "Фотография прикреплена к заявке"};
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult> GetPhoto(int id)
         {

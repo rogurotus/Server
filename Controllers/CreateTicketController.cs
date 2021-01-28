@@ -49,14 +49,21 @@ namespace Server.Controllers
                 return new SimpleResponse{error = "Пользователь не найден"};
             }
 
-            string date = DateTime.UtcNow.ToString("yyyy-MM-dd");
-            int tiket_user_today = await _db.tikets
+            DateTime date_time = DateTime.Now;
+            date_time = date_time.AddHours(7);
+            string date = date_time.ToString("yyyy-MM-dd HH:mm:ss");
+
+            int ticket_user_today = await _db.tikets
                 .Where(
                     t => t.mobile_token == mobile_ticket.user_token &&
-                    t.date_add == date
+                    t.date_add.Substring(0,10) == date.Substring(0,10)
                 ).CountAsync();
+
+            //ALARM
+            //ticket_user_today = 0;
+            //ALARM
             
-            if(tiket_user_today < 5)
+            if(ticket_user_today < 5)
             {   
                 if(traffic_light.district == null) 
                 {   
@@ -111,14 +118,20 @@ namespace Server.Controllers
                 return new SimpleResponse{error = "Пользователь не найден"};
             }
 
-            string date = DateTime.UtcNow.ToString("yyyy-MM-dd");
-            int tiket_user_today = await _db.tikets
+            DateTime date_time = DateTime.Now;
+            date_time = date_time.AddHours(7);
+            string date = date_time.ToString("yyyy-MM-dd HH:mm:ss");
+            int ticket_user_today = await _db.tikets
                 .Where(
                     t => t.mobile_token == mobile_ticket.user_token &&
-                    t.date_add == date
+                    t.date_add.Substring(0,10) == date.Substring(0,10)
                 ).CountAsync();
+
+            //ALARM
+            //ticket_user_today = 0;
+            //ALARM
             
-            if(tiket_user_today < 5)
+            if(ticket_user_today < 5)
             {   
 
                 string desc = mobile_ticket.description;

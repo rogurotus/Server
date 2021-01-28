@@ -121,6 +121,8 @@ namespace Server.DataBase
 
         public DbSet<TicketTrafficLight> ticket_traffic_lights {get; set;}
 
+        public DbSet<TicketHistory> ticket_historys {get; set;}
+
         public DbSet<TicketDuplicate> ticket_dublicate {get; set;}
         public DbSet<Image> images {get; set;}
         public DbSet<Photo> photos {get; set;}
