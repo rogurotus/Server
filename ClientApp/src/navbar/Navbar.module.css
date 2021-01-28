@@ -1,0 +1,48 @@
+.App_Nav {
+    background-color: #171C20;
+    border-bottom: 1px solid #e5e5e5;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    grid-template-areas: "NAVLINK USER BUTTON";
+    align-items: center;
+    justify-items: left;
+}
+
+.NavLink {
+    grid-area: NAVLINK;
+    margin: 8px;
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 13px;
+    display: inline-block;
+    text-align: center;
+    white-space: nowrap;
+    border-radius: 3px;
+
+}
+
+.NavLink:hover {
+    margin: 8px;
+    text-decoration: underline;
+    color: white;
+}
+
+.User {
+    color: white;
+}
+
+.button {
+}
+
+.User_Text {
+    grid-area: USER;
+    margin-right: 10px;
+}
+
+.ForBut {
+    grid-area: BUTTON;
+    margin-right: 10px;
+}

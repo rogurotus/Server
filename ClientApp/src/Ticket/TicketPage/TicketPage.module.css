@@ -1,0 +1,131 @@
+.ContentPage {
+    min-height: 100vh;
+    font-size: calc(10px + 2vmin);
+    color: white;
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    grid-template-rows: 1fr;
+    grid-template-areas: "SideBar Content"
+}
+
+.SideBar {
+    grid-area: SideBar;
+    border-right: 1px solid #3498db;
+    background-color: #444345;
+}
+
+.Content {
+    grid-area: Content;
+
+}
+
+.ForStatus {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1px;
+    grid-template-rows: 1fr;
+    grid-template-areas: "StatusEnrolled StatusProcessing StatusCompleted . .";
+}
+
+.HelperBar {
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.Sort {
+    margin: 10px;
+    grid-area: Sort;
+    text-align: right;
+    align-items: center;
+    justify-content: right;
+}
+
+.StatusEnrolled {
+    border-radius: 3px;
+    grid-area: StatusEnrolled;
+    background-color: #1E222B;
+    min-height: 120px;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.StatusProcessing {
+    border-radius: 3px;
+    grid-area: StatusProcessing;
+    background-color: #1E222B;
+    min-height: 120px;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.StatusCompleted {
+    border-radius: 3px;
+    grid-area: StatusCompleted;
+    background-color: #1E222B;
+    min-height: 120px;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.NullTicket {
+    border-radius: 3px;
+    margin: 10px;
+    width: 300px;
+    height: 50px;
+    background-color: #CCC9D9;
+}
+
+.ItemsBut {
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    margin: 10px;
+}
+
+.Img {
+    height: 40px;
+    width: 40px;
+}
+
+.Button {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    text-align: center;
+    align-items: center;
+}
+
+.StatusNames {
+    width: 100%;
+    border-bottom: 1px solid #e5e5e5;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    grid-template-areas: "StatusEnrolledName StatusEnrolledQuantity";
+}
+
+.StatusName {
+    grid-area: StatusEnrolledName;
+    margin: 10px;
+}
+
+.StatusQuantity {
+    grid-area: StatusEnrolledQuantity;
+    margin: 10px;
+    text-align: right;
+    align-items: center;
+    justify-content: right;
+}
+
+.TicketName {
+    margin-left: 10px;
+}
+
+.scrol {
+    overflow-y: scroll;
+    height: 100vh;
+}

@@ -1,0 +1,17 @@
+.DetailDescription {
+    grid-area: DetailDescription;
+    display: grid;
+    grid-template-columns: 25% 1fr;
+    grid-template-rows: 1fr;
+    grid-template-areas: "DetailDescriptionType DetailDescriptionInfo";
+}
+
+.DetailDescriptionType {
+    grid-area: DetailDescriptionType;
+    margin-left: 10px;
+}
+
+.DetailDescriptionInfo {
+    grid-area: DetailDescriptionInfo;
+    margin-left: 10px;
+}
