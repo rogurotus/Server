@@ -31,7 +31,7 @@ namespace Server.Controllers
             _db = db;
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<List<TicketHistory>>> GetHistory(int id)
         {

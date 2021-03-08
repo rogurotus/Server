@@ -48,7 +48,7 @@ namespace Server.Controllers
             return new SimpleResponse{error = "Заявка не найдена"};
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpGet("TrafficLight")]
         public async Task<ActionResult<List<TicketTrafficLight>>> GetTickets()
         {
@@ -96,7 +96,7 @@ namespace Server.Controllers
             return tickets_res;
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpPost("Update")]
         public async Task<ActionResult<SimpleResponse>> UpdateState(Ticket ticket)
         {
