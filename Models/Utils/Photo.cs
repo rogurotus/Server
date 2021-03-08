@@ -10,6 +10,8 @@ namespace Server.Models
         [Key]
         public int id {get; set;}
 
+        public bool mini {get; set;}
+
         public byte[] file {get; set;}
 
         public int ticket {get; set;}

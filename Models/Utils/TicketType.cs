@@ -12,6 +12,10 @@ namespace Server.Models
 
         public string name {get; set;}
 
+        public bool QRable {get; set;}
+
+        public string Hint {get; set;}
+
         public string description {get; set;}
 
         public string url {get; set;}

@@ -49,51 +49,32 @@ namespace Server.Controllers
         }
 
         //[Authorize]
-        [HttpGet("TrafficLight")]
-        public async Task<ActionResult<List<TicketTrafficLight>>> GetTickets()
+        [HttpGet("{type}")]
+        public async Task<ActionResult<List<TicketResponse>>> GetTickets(int type)
         {
-            // не работает не пойми почему. ПРИЧИНА???
-            /*
-            return _db.ticket_traffic_lights
-                .Join(_db.tikets, l => l.ticket_id, t => t.id, join_ticket)
-                .Join(_db.traffic_lights, l => l.traffic_light_id, t => t.id, join_traffic_light)
-                .Join(_db.districts, l => l.ticket.district_id, d => d.id, join_district)
-                .ToList();
-            */
-
-            // СИЛЬНЫЙ КОСТЫЛЬ
-            var ticket_traffic_lights = await _db.ticket_traffic_lights.ToListAsync();
-            var tickets = await _db.tikets.ToListAsync();
-            var ticket_states = await _db.ticket_states.ToListAsync();
-            var traffic_lights = await _db.traffic_lights.ToListAsync();
-            var districts = await _db.districts.ToListAsync();
-            var ticket_type = await _db.tiket_types.ToListAsync();
-            var mobile_user = await _db.mobile_users.ToListAsync();
-            var ticket_dublicate = await _db.ticket_dublicate.ToListAsync();
-            
-            var traffic_light_join = traffic_lights
-                .Join(districts, tr => tr.district_id, d => d.id, PostgreDataBase.join_district);
-
-            foreach(Ticket t in tickets)
+            switch (type)
             {
-                List<int> dublicates = await _db.ticket_dublicate
-                    .Where(d => d.main_tiket == t.id)
-                    .Select(t => t.tiket)
-                    .ToListAsync();
-                t.dublicates_id = dublicates;
+                case 1:
+                {
+                    return (await _db.ticket_traffic_lights.ToListAsync()).Select(t => t.ToResponse(_db)).ToList();
+                }
+                case 2:
+                {
+                    return (await _db.ticket_graffitis.ToListAsync()).Select(t => t.ToResponse(_db)).ToList();
+                }
+                case 3:
+                {
+                    return (await _db.ticket_road_signs.ToListAsync()).Select(t => t.ToResponse(_db)).ToList();
+                }
+                case 4:
+                {
+                    return (await _db.ticket_button.ToListAsync()).Select(t => t.ToResponse(_db)).ToList();
+                }
+                default:
+                {
+                    return null;
+                }
             }
-
-            var tickets_join = tickets
-                .Join(ticket_type, t => t.type_id, ty => ty.id, PostgreDataBase.join_type)
-                .Join(ticket_states, t => t.state_id, st => st.id, PostgreDataBase.join_state)
-                .Join(mobile_user, t => t.mobile_token, m => m.token, PostgreDataBase.join_user);
-
-            var tickets_res = ticket_traffic_lights
-                .Join(tickets_join, l => l.ticket_id, t => t.id, PostgreDataBase.join_ticket)
-                .Join(traffic_lights, l => l.traffic_light_id, t => t.id, PostgreDataBase.join_traffic_light)
-                .ToList();
-            // КОНЕЦ СИЛЬНОГО КОСТЫЛЯ
-            return tickets_res;
         }
 
         //[Authorize]
@@ -145,14 +126,6 @@ namespace Server.Controllers
                 return new SimpleResponse {message = "Данные обновлены удачно"};
             }
             return new SimpleResponse {error = "Заявка не найдена"};
-        }
-
-        [HttpGet("Photos")]
-        public async Task<ActionResult<List<int>>> GetPhotosTicket(int id)
-        {
-            List<int> photos = await _db.photos
-                .Where(p => p.ticket == id).Select(p => p.id).ToListAsync();
-            return photos;
         }
     }
 }

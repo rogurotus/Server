@@ -31,12 +31,12 @@ namespace Server.Controllers
             string hash_pass = PostgreDataBase.hasher(user.pass);
             WebUser user_db = await 
                 _db.users
-                .Where(u => u.pass == hash_pass && (u.login == user.login || u.email == user.email))
+                .Where(u => u.pass == hash_pass && u.login == user.login)
                 .FirstOrDefaultAsync();
             
             if(user_db != null)
             {
-                await Authenticate(user_db.email);
+                await Authenticate(user_db.login);
                 return new SimpleResponse{message = "Вход выполнен успешно"};
             }
             return new SimpleResponse{error = "Пользователь с таким логином и паролем не найден"};
@@ -48,15 +48,15 @@ namespace Server.Controllers
             string hash_pass = PostgreDataBase.hasher(user.pass);
             WebUser user_db = await 
                 _db.users
-                .Where(u => u.login == user.login || u.email == user.email)
+                .Where(u => u.login == user.login)
                 .FirstOrDefaultAsync();
             
             if(user_db == null)
             {
                 await _db.users.AddAsync(
-                    new WebUser{login = user.login, pass = hash_pass, email = user.email});
+                    new WebUser{login = user.login, pass = hash_pass, email = ""});
                 await _db.SaveChangesAsync();
-                await Authenticate(user.email);
+                await Authenticate(user.login);
                 return new SimpleResponse{message = "Аккаунт создан успешно"};
             }
             return new SimpleResponse{error = "Пользователь с таким логином или почтой уже существует"};

@@ -103,7 +103,7 @@ namespace Server.DataBase
         public DbSet<TicketType> tiket_types {get; set;}
         private List<TicketType> test_tiket_types = new List<TicketType> 
         {
-            new TicketType{id = 1, name = "Светофор", description = "Сообщить о нерабочем светофоре", url = "/Image/test1.jpg"},
+            new TicketType{id = 1, name = "Светофоры", description = "Сообщить о нерабочем светофоре", url = "/Image/test1.jpg", QRable = true,},
             new TicketType{id = 2, name = "Граффити", description = "Сообщить о граффити в неположенном месте", url = "/Image/test2.jpg"},
             new TicketType{id = 3, name = "Дорожные знаки", description = "Сообщить о нарушениях", url = "/Image/test3.jpg"},
             new TicketType{id = 4, name = "Кнопки", description = "Сообщить о нерабочей кнопке", url = "/Image/test4.jpg"},
@@ -120,6 +120,9 @@ namespace Server.DataBase
         };
 
         public DbSet<TicketTrafficLight> ticket_traffic_lights {get; set;}
+        public DbSet<TicketGraffiti> ticket_graffitis {get; set;}
+        public DbSet<TicketRoadSign> ticket_road_signs {get; set;}
+        public DbSet<TicketButton> ticket_button {get; set;}
 
         public DbSet<TicketHistory> ticket_historys {get; set;}
 

@@ -65,6 +65,8 @@ namespace Server.Controllers
                 photo.file = binaryReader.ReadBytes((int)request.photo.Length);
             }
             await _db.photos.AddAsync(photo);
+            //Photo mini = new Photo {mini = true, file = ResizeImage(photo.file), ticket = photo.ticket};
+            //await _db.photos.AddAsync(mini);
             await _db.SaveChangesAsync();
             return new SimpleResponse{message = "Фотография прикреплена к заявке"};
         }
