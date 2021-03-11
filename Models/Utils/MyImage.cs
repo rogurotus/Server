@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace Server.Models
 {
     [Table("image")]
-    public class Image
+    public class MyImage
     {
         [Key]
         public string name {get; set;}

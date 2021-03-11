@@ -35,12 +35,12 @@ namespace Server.Controllers
         [HttpPost("{name}")]
         public async Task<SimpleResponse> Post(IFormFile file, string name)
         {
-            Image image_bd = await _db.images.Where(i => i.name == name).FirstOrDefaultAsync();
+            MyImage image_bd = await _db.images.Where(i => i.name == name).FirstOrDefaultAsync();
             if (image_bd != null)
             {
                 return new SimpleResponse{error = "Такая картинка уже есть"};
             }
-            Image image = new Image();
+            MyImage image = new MyImage();
             image.name = name;
             using (var binaryReader = new BinaryReader(file.OpenReadStream()))
             {
@@ -54,7 +54,7 @@ namespace Server.Controllers
         [HttpGet("{name}")]
         public async Task<ActionResult> GetImage(string name)
         {
-            Image file = await _db.images.Where(i => i.name == name).FirstOrDefaultAsync();
+            MyImage file = await _db.images.Where(i => i.name == name).FirstOrDefaultAsync();
             if (file == null)
             {
                 return Content("Картинка не найдена");

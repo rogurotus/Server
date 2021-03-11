@@ -127,7 +127,7 @@ namespace Server.DataBase
         public DbSet<TicketHistory> ticket_historys {get; set;}
 
         public DbSet<TicketDuplicate> ticket_dublicate {get; set;}
-        public DbSet<Image> images {get; set;}
+        public DbSet<MyImage> images {get; set;}
         public DbSet<Photo> photos {get; set;}
 
         // TODO db на фотки блобы и вся херня
@@ -164,7 +164,7 @@ namespace Server.DataBase
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Image>(entity =>
+            modelBuilder.Entity<MyImage>(entity =>
             {
                 entity.Property(x => x.file).HasColumnType("bytea");
             });
