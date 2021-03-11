@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using System.IO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
+using System.Drawing;
 
 
 namespace Server.Controllers
@@ -29,6 +30,21 @@ namespace Server.Controllers
         public PhotoController(PostgreDataBase db)
         {
             _db = db;
+        }
+
+        private byte[] resize(byte[] input)
+        {
+            using (var stream = new System.IO.MemoryStream(input))
+            {
+                var img = Image.FromStream(stream);
+                var thumbnail = img.GetThumbnailImage(128, 128, () => false, IntPtr.Zero);
+
+                using (var thumbStream = new System.IO.MemoryStream())
+                {
+                    thumbnail.Save(thumbStream, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    return thumbStream.GetBuffer();
+                }
+            }
         }
 
         [HttpPost]
@@ -65,8 +81,8 @@ namespace Server.Controllers
                 photo.file = binaryReader.ReadBytes((int)request.photo.Length);
             }
             await _db.photos.AddAsync(photo);
-            //Photo mini = new Photo {mini = true, file = ResizeImage(photo.file), ticket = photo.ticket};
-            //await _db.photos.AddAsync(mini);
+            Photo mini = new Photo {mini = true, file = resize(photo.file), ticket = photo.ticket};
+            await _db.photos.AddAsync(mini);
             await _db.SaveChangesAsync();
             return new SimpleResponse{message = "Фотография прикреплена к заявке"};
         }
