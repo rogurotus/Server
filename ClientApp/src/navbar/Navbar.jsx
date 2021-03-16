@@ -1,6 +1,6 @@
 import React from "react";
 import s from "./Navbar.module.css";
-import {NavLink, withRouter} from "react-router-dom";
+import {withRouter} from "react-router-dom";
 import {useHistory} from "react-router-dom";
 import * as axios from "axios";
 
@@ -13,21 +13,23 @@ let Navbar = (props) => {
                     alert(res.data.error);
                 } else if (res.data.error === null) {
                     alert(res.data.message);
+                    localStorage.setItem('user', "");
                     history.push("/Authorization/Entrance");
                 }
             });
     }
     let visible = () => {
         if (props.buttonVisible === true) {
-            return (<div className={s.App_Nav}><NavLink className={s.NavLink} to={props.links}>{props.links}</NavLink>
-                <div className={s.User_Text}><p className={s.User}>{props.user}</p></div>
-                <div className={s.ForBut}>
-                    <button className={s.button} onClick={ClickLogOut}>{"Logout"}</button>
-                </div>
-            </div>);
+            return (
+                <div className={s.App_Nav}>{/*<NavLink className={s.NavLink} to={props.links}>{props.links}</NavLink>*/}
+                    <div className={s.User_Text}><p className={s.User}>{"Пользователь: " + props.user}</p></div>
+                    <div className={s.ForBut}>
+                        <button className={s.button} onClick={ClickLogOut}>{"Выход"}</button>
+                    </div>
+                </div>);
         } else {
             return (<div className={s.App_Nav}>
-                <NavLink className={s.NavLink} to={props.links}>{props.links}</NavLink>
+                {/*<NavLink className={s.NavLink} to={props.links}>{props.links}</NavLink>*/}
             </div>)
         }
     }

@@ -38,6 +38,8 @@ class App extends React.Component {
                         <Route path={this.linkPageTicket} render={() => <TicketPageContainer/>}/>
 
                         <Route path={this.linkPageTicketInfo} render={() => <TicketInfoContainer/>}/>
+                        <Route exact path={this.linkPageTicketInfo + "/"}
+                               render={() => <Redirect to={this.linkPageTicketInfo}/>}/>
                     </div>
 
                 </div>

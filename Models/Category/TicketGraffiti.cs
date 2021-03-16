@@ -69,7 +69,9 @@ namespace Server.Models
                     .Select(t => t.tiket)
                     .ToList(),
                 photo_id = db.photos
-                    .Where(p => p.ticket == ticket_id).Select(p => p.id).ToList(),
+                    .Where(p => p.ticket == ticket_id && !p.mini).Select(p => p.id).ToList(),
+                mini_photo_id = db.photos
+                    .Where(p => p.ticket == ticket_id && p.mini).Select(p => p.id).ToList(),
                 histories = history,
                 district = db.districts.Where(d => d.id == 1).FirstOrDefault(),
             };

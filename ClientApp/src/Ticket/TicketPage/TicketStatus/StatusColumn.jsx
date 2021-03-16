@@ -11,7 +11,7 @@ let StatusColumn = (props) => {
         switch (id) {
             case "0": {
                 for (let i = 0; i < props.Ticket.length; i++) {
-                    if (props.Ticket[i].ticket.state.name === name) {
+                    if (props.Ticket[i].state.name === name) {
                         j++;
                     }
                 }
@@ -19,8 +19,8 @@ let StatusColumn = (props) => {
             }
             default: {
                 for (let i = 0; i < props.Ticket.length; i++) {
-                    if ((props.Ticket[i].ticket.state.name === name) &&
-                        (props.Ticket[i].traffic_light.district.name === props.directs[id - 1].name)) {
+                    if ((props.Ticket[i].state.name === name) &&
+                        (props.Ticket[i].district.name === props.directs[id - 1].name)) {
                         j++;
                     }
                 }
@@ -36,7 +36,7 @@ let StatusColumn = (props) => {
         switch (id) {
             case "0": {
                 for (let i = 0; i < props.Ticket.length; i++) {
-                    if (props.Ticket[i].ticket.state.name === name) {
+                    if (props.Ticket[i].state.name === name) {
                         j++;
                     }
                 }
@@ -44,8 +44,8 @@ let StatusColumn = (props) => {
             }
             default: {
                 for (let i = 0; i < props.Ticket.length; i++) {
-                    if ((props.Ticket[i].ticket.state.name === name) &&
-                        (props.Ticket[i].traffic_light.district.name === props.directs[id - 1].name)) {
+                    if ((props.Ticket[i].state.name === name) &&
+                        (props.Ticket[i].district.name === props.directs[id - 1].name)) {
                         j++;
                     }
                 }
@@ -61,7 +61,7 @@ let StatusColumn = (props) => {
         switch (id) {
             case "0": {
                 for (let i = 0; i < props.Ticket.length; i++) {
-                    if (props.Ticket[i].ticket.state.name === name) {
+                    if (props.Ticket[i].state.name === name) {
                         j++;
                     }
                 }
@@ -69,8 +69,8 @@ let StatusColumn = (props) => {
             }
             default: {
                 for (let i = 0; i < props.Ticket.length; i++) {
-                    if ((props.Ticket[i].ticket.state.name === name) &&
-                        (props.Ticket[i].traffic_light.district.name === props.directs[id - 1].name)) {
+                    if ((props.Ticket[i].state.name === name) &&
+                        (props.Ticket[i].district.name === props.directs[id - 1].name)) {
                         j++;
                     }
                 }
@@ -85,9 +85,9 @@ let StatusColumn = (props) => {
         switch (id) {
             case "0": {
                 for (let i = 0; i < props.Ticket.length; i++) {
-                    if (props.Ticket[i].ticket.state.name === name) {
-                        array[i] = <TicketEnrolled name={props.Ticket[i].ticket_id + " " +
-                        props.Ticket[i].traffic_light.district.name} id={i}
+                    if (props.Ticket[i].state.name === name) {
+                        array[i] = <TicketEnrolled name={props.Ticket[i].id + " " +
+                        props.Ticket[i].district.name} id={i} nomber={props.Ticket[i].id}
                                                    ClickDirectInfo={props.ClickDirectInfo}/>
                     }
                 }
@@ -95,10 +95,10 @@ let StatusColumn = (props) => {
             }
             default: {
                 for (let i = 0; i < props.Ticket.length; i++) {
-                    if ((props.Ticket[i].ticket.state.name === name) &&
-                        (props.Ticket[i].traffic_light.district.name === props.directs[id - 1].name)) {
-                        array[i] = <TicketEnrolled name={props.Ticket[i].ticket_id + " " +
-                        props.Ticket[i].traffic_light.district.name} id={i}
+                    if ((props.Ticket[i].state.name === name) &&
+                        (props.Ticket[i].district.name === props.directs[id - 1].name)) {
+                        array[i] = <TicketEnrolled name={props.Ticket[i].id + " " +
+                        props.Ticket[i].district.name} id={i} nomber={props.Ticket[i].id}
                                                    ClickDirectInfo={props.ClickDirectInfo}/>
                     }
                 }
@@ -113,19 +113,21 @@ let StatusColumn = (props) => {
         switch (id) {
             case "0": {
                 for (let i = 0; i < props.Ticket.length; i++) {
-                    if (props.Ticket[i].ticket.state.name === name) {
-                        array[i] = <TicketProcessing name={props.Ticket[i].ticket_id + " " +
-                        props.Ticket[i].traffic_light.district.name} id={i} ClickDirectInfo={props.ClickDirectInfo}/>
+                    if (props.Ticket[i].state.name === name) {
+                        array[i] = <TicketProcessing name={props.Ticket[i].id + " " +
+                        props.Ticket[i].district.name} id={i} nomber={props.Ticket[i].id}
+                                                     ClickDirectInfo={props.ClickDirectInfo}/>
                     }
                 }
                 break;
             }
             default: {
                 for (let i = 0; i < props.Ticket.length; i++) {
-                    if ((props.Ticket[i].ticket.state.name === name) &&
-                        (props.Ticket[i].traffic_light.district.name === props.directs[id - 1].name)) {
-                        array[i] = <TicketProcessing name={props.Ticket[i].ticket_id + " " +
-                        props.Ticket[i].traffic_light.district.name} id={i} ClickDirectInfo={props.ClickDirectInfo}/>
+                    if ((props.Ticket[i].state.name === name) &&
+                        (props.Ticket[i].district.name === props.directs[id - 1].name)) {
+                        array[i] = <TicketProcessing name={props.Ticket[i].id + " " +
+                        props.Ticket[i].district.name} id={i} nomber={props.Ticket[i].id}
+                                                     ClickDirectInfo={props.ClickDirectInfo}/>
                     }
                 }
                 break;
@@ -138,19 +140,21 @@ let StatusColumn = (props) => {
         switch (id) {
             case "0": {
                 for (let i = 0; i < props.Ticket.length; i++) {
-                    if (props.Ticket[i].ticket.state.name === name) {
-                        array[i] = <TicketCompleted name={props.Ticket[i].ticket_id + " " +
-                        props.Ticket[i].traffic_light.district.name} id={i} ClickDirectInfo={props.ClickDirectInfo}/>
+                    if (props.Ticket[i].state.name === name) {
+                        array[i] = <TicketCompleted name={props.Ticket[i].id + " " +
+                        props.Ticket[i].district.name} id={i} nomber={props.Ticket[i].id}
+                                                    ClickDirectInfo={props.ClickDirectInfo}/>
                     }
                 }
                 break;
             }
             default: {
                 for (let i = 0; i < props.Ticket.length; i++) {
-                    if ((props.Ticket[i].ticket.state.name === name) &&
-                        (props.Ticket[i].traffic_light.district.name === props.directs[id - 1].name)) {
-                        array[i] = <TicketCompleted name={props.Ticket[i].ticket_id + " " +
-                        props.Ticket[i].traffic_light.district.name} id={i} ClickDirectInfo={props.ClickDirectInfo}/>
+                    if ((props.Ticket[i].state.name === name) &&
+                        (props.Ticket[i].district.name === props.directs[id - 1].name)) {
+                        array[i] = <TicketCompleted name={props.Ticket[i].id + " " +
+                        props.Ticket[i].district.name} id={i} nomber={props.Ticket[i].id}
+                                                    ClickDirectInfo={props.ClickDirectInfo}/>
                     }
                 }
                 break;
@@ -215,4 +219,4 @@ let StatusColumn = (props) => {
         </div>
     );
 }
-export default StatusColumn;
+export default StatusColumn;/*Данная функия генерирует и сортирует приходящие заявки*/

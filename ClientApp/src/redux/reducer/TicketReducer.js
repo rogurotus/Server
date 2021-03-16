@@ -6,26 +6,27 @@ const dataActionType = 'DATA';
 const stateActionType = 'STATE';
 const typeActionType = 'TYPE';
 const directActionType = 'DIRECT';
+const userActionType = 'USER';
 const ClickProcActionType = 'CLICK-PROC';
 const ClickCompActionType = 'CLICK-COMP';
 const imgActionType = 'IMG';
-const historyActionType='HISTORY';
+const historyActionType = 'HISTORY';
 let InitialState = {
     ticket: [], Status: [], typeTicket: [], TicketInfo: [], direct: [], id: "0", img: [],
     NamesTickets: [
-        {id: 0, name: "Сортировка по району:"},
+        {id: 0, name: "Фильтрация по району:"},
         {id: 1, name: "Заявок: "}
     ],
     optionValue: {id: 0, value: 0, name: "Все"},
     NamesTicketInfo: [
         {id: 0, name: "Имя заявки"},
-        {id: 1, name: "Панель состояний"},
+        {id: 1, name: "Действия"},
         {id: 2, name: "Детали заявки"},
         {id: 3, name: "История заявки"},
         {id: 4, name: "Изображения прикреплены:"}
     ],
     links: [{id: 0, link: "/TicketPage"}, {id: 1, link: "/TicketInfoPage"}], link_id: 0,
-    history:[]
+    history: [], user: ""
 
 }
 const TicketReducer = (state = InitialState, action) => {
@@ -65,14 +66,12 @@ const TicketReducer = (state = InitialState, action) => {
                 id: action.idTicket,
                 state_id: action.StatusId,
             };
-            debugger;
             /*let v="http://84.22.135.132:5000"*/
             axios.post("/Ticket/Update", data, [{'Content-Type': 'application/json'}])
                 .then(res => {
                     if (res.data.message === null) {
                         alert(res.data.error);
                     } else if (res.data.error === null) {
-                        debugger;
                         alert(res.data.message);
                     }
 
@@ -84,29 +83,31 @@ const TicketReducer = (state = InitialState, action) => {
                 id: action.idTicket,
                 state_id: action.StatusId,
             };
-            debugger;
             /*let v="http://84.22.135.132:5000"*/
             axios.post("/Ticket/Update", data, [{'Content-Type': 'application/json'}])
                 .then(res => {
                     if (res.data.message === null) {
                         alert(res.data.error);
                     } else if (res.data.error === null) {
-                        debugger;
                         alert(res.data.message);
                     }
 
                 });
-                break;
+            break;
         }
         case imgActionType: {
             let stateCopy = {...state};
             stateCopy.img = action.img;
             return stateCopy;
         }
-        case historyActionType:{
-            let stateCopy={...state};
-            stateCopy.history=action.history;
-            debugger
+        case historyActionType: {
+            let stateCopy = {...state};
+            stateCopy.history = action.history;
+            return stateCopy;
+        }
+        case userActionType: {
+            let stateCopy = {...state}
+            stateCopy.user = action.user;
             return stateCopy;
         }
         default:
@@ -119,6 +120,7 @@ export const dataActionCreator = (data) => ({type: dataActionType, data: data});
 export const stateActionCreator = (state) => ({type: stateActionType, state: state});
 export const typeActionCreator = (type) => ({type: typeActionType, typeTicket: type});
 export const directActionCreator = (direct) => ({type: directActionType, direct: direct});
+export const userActionCreator = (user) => ({type: userActionType, user: user});
 export const ClickProcActionCreator = (id_ticket, id_status) => ({
     type: ClickProcActionType, idTicket: id_ticket,
     StatusId: id_status

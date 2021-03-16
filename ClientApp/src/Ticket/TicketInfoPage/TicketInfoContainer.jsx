@@ -10,7 +10,7 @@ import {
 let mapStateToProps = (state) => {
     return {
         Ticket: state.PageTicketInfo.TicketInfo,
-        HistoryText:state.PageTicketInfo.history,
+        HistoryText: state.PageTicketInfo.history,
         NameTicket: state.PageTicketInfo.NamesTicketInfo[0].name,
         SideBarName: state.PageTicketInfo.NamesTicketInfo[1].name,
         DetailName: state.PageTicketInfo.NamesTicketInfo[2].name,
@@ -33,7 +33,9 @@ let mapDispatchToProps = (dispatch) => {
         img: (img) => {
             dispatch(imgActionCreator(img))
         },
-        Hist:(history)=>{dispatch(historyActionCreator(history))}
+        Hist: (history) => {
+            dispatch(historyActionCreator(history))
+        }
     };
 };
 let TicketInfoContainer = connect(mapStateToProps, mapDispatchToProps)(TicketInfoPage);

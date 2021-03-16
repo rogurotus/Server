@@ -8,27 +8,27 @@ class Registration extends React.Component {
     onLoginChange = (e) => {
         let loginText = e.target.value;
         this.props.UpdateLogin(loginText);
-    };
+    };/*На ввод логина*/
     onPassChange = (e) => {
         let passText = e.target.value;
         this.props.UpdatePass(passText, this.props.lengthPass);
-    };
+    };/*На ввод пароля*/
     onPassRepChange = (e) => {
         let passRepText = e.target.value;
         this.props.UpdatePassRep(passRepText, this.props.lengthPassRep);
-    };
-    onEmailChange = (e) => {
-        let emailText = e.target.value;
-        this.props.UpdateEmail(emailText);
-    };
+    };/*На ввод повторного пароля*/
+    /*    onEmailChange = (e) => {
+            let emailText = e.target.value;
+            this.props.UpdateEmail(emailText);
+        };*//*На ввод почты*/
     onclick = () => {
         const {history} = this.props;
         this.props.onClickReg(history);
-    };
+    };/*На регистрацию*/
     onclickCancel = () => {
         const {history} = this.props;
         this.props.onClickCancel(history);
-    }
+    }/*Отмена*/
 
     render() {
         return (
@@ -47,30 +47,32 @@ class Registration extends React.Component {
                                 <input onChange={this.onLoginChange}
                                        value={this.props.valueLoginReg}
                                        type={this.props.Type}
-                                       className={s.UserInputReg}/>
+                                       className={s.UserInputReg}/>{/*Окно логина*/}
                                 {/*                   <div className={props.store.PageReg.ClassNameReg[7].name}>
                             {props.store.PageReg.NamesReg[2].name}</div>
                         <input type={props.store.Type} className={props.store.PageReg.ClassNameReg[8].name}/>*/}
                                 <div>{this.props.NamePass}</div>
                                 <input onChange={this.onPassChange} value={this.props.valuePasswordReg}
-                                       type={this.props.Type} className={s.PasswordInputReg}/>
+                                       type={this.props.Type} className={s.PasswordInputReg}/>{/*Окно пароля*/}
                                 <div>{this.props.NamePassRep}</div>
                                 <input onChange={this.onPassRepChange}
                                        value={this.props.valuePassRepReg}
                                        type={this.props.Type}
-                                       className={s.RepPasswordInputReg}/>
-                                <div>{this.props.NameEmail}</div>
-                                <input onChange={this.onEmailChange}
+                                       className={s.RepPasswordInputReg}/>{/*Окно повтора пароля*/}
+                                {/*<div>{this.props.NameEmail}</div>*/}
+                                {/*                           <input onChange={this.onEmailChange}
                                        value={this.props.valueEmail}
                                        type={this.props.Type}
-                                       className={s.EmailInputReg}/>
+                                       className={s.EmailInputReg}/>*/}
                             </div>
                         </div>
                         <div className={s.ForNavLinkReg}>
                             <button className={s.CancelNavLink}
                                     onClick={this.onclickCancel}>{this.props.NameCancel}</button>
-                            <button className={s.ButNavLinkReg} onClick={this.onclick}>{this.props.NameBut}</button>
-
+                            {/*на рег-ю*/}
+                            <button className={s.ButNavLinkReg} onClick={this.onclick}>
+                                {this.props.NameBut}</button>
+                            {/*Отмена*/}
                         </div>
                     </div>
                 </div>

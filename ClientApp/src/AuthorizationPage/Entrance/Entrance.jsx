@@ -7,23 +7,23 @@ class Entrance extends React.Component {
     onClick = () => {
         const {history} = this.props;
         this.props.onClickEnter(history);
-    };
-    OnClickForgot = () => {
-        const {history} = this.props;
-        this.props.onClickForgot(history);
-    }
+    };/*На вход*/
+    /*    OnClickForgot = () => {
+            const {history} = this.props;
+            this.props.onClickForgot(history);
+        }*//*для востановления почты*/
     OnClickReg = () => {
         const {history} = this.props;
         this.props.onClickReg(history);
-    }
+    }/*на регистрацию*/
     onLoginChange = (e) => {
         let loginText = e.target.value;
         this.props.onLoginChangeEnter(loginText);
-    };
+    };/*Ввод логина*/
     onPassChange = (e) => {
         let passText = e.target.value;
         this.props.onPassChangeEnter(passText, this.props.length);
-    };
+    };/*Ввод логина*/
 
     render() {
         return (
@@ -56,7 +56,7 @@ class Entrance extends React.Component {
                             </div>
                         </div>
                         <div className={s.ForNavLink}>
-                            <p className={s.ForgotPassNavLink} onClick={this.OnClickForgot}>{this.props.NameForgot}</p>
+                            {/*<p className={s.ForgotPassNavLink} onClick={this.OnClickForgot}>{this.props.NameForgot}</p>*/}
                             <button className={s.RegButNavLink} onClick={this.OnClickReg}>{this.props.NameReg}</button>
                             <button onClick={this.onClick}
                                     className={s.EnterBut}>

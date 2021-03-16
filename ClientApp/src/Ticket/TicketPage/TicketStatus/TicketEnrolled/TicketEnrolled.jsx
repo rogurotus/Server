@@ -6,7 +6,7 @@ let TicketEnrolled = (props) => {
     const history = useHistory();
     let viewProfile = () => {
         props.ClickDirectInfo(props.id);
-        history.push("/TicketInfoPage");
+        history.push("/TicketInfoPage" + "/" + props.nomber);
     };
     return (
         <div className={s.TicketEnrolled} onClick={viewProfile}>

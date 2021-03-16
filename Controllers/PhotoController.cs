@@ -69,10 +69,10 @@ namespace Server.Controllers
                 .Where(p => p.ticket == request.ticket_id)
                 .CountAsync();
             
-            if(count >= 5)
+            /*if(count > 15)
             {
                 return new SimpleResponse{error = "Превышен лимит заявок"};
-            }
+            }*/
 
             Photo photo = new Photo();
             photo.ticket = request.ticket_id;

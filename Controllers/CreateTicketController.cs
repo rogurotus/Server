@@ -60,7 +60,7 @@ namespace Server.Controllers
                 ).CountAsync();
 
             //ALARM
-            //ticket_user_today = 0;
+            ticket_user_today = 0;
             //ALARM
             
             if(ticket_user_today < 5)
@@ -128,7 +128,7 @@ namespace Server.Controllers
                 ).CountAsync();
 
             //ALARM
-            //ticket_user_today = 0;
+            ticket_user_today = 0;
             //ALARM
             
             if(ticket_user_today < 5)
@@ -191,7 +191,7 @@ namespace Server.Controllers
                 ).CountAsync();
 
             //ALARM
-            //ticket_user_today = 0;
+            ticket_user_today = 0;
             //ALARM
             
             if(ticket_user_today < 5)
@@ -253,7 +253,7 @@ namespace Server.Controllers
                 ).CountAsync();
 
             //ALARM
-            //ticket_user_today = 0;
+            ticket_user_today = 0;
             //ALARM
             
             if(ticket_user_today < 5)
@@ -315,7 +315,7 @@ namespace Server.Controllers
                 ).CountAsync();
 
             //ALARM
-            //ticket_user_today = 0;
+            ticket_user_today = 0;
             //ALARM
             
             if(ticket_user_today < 5)

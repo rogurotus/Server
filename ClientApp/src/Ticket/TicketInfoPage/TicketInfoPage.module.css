@@ -1,5 +1,5 @@
 .TicketInfoPage {
-    min-height: 100vh;
+    min-height: 100vmin;
     font-size: calc(10px + 2vmin);
     color: white;
     display: grid;
@@ -115,12 +115,16 @@
     margin: 1px;
 }
 
+.imgNew {
+    margin: 1px;
+    width: 347px;
+    height: 160px;
+    display: block;
+    z-index: 99999999;
+}
+
 .ForImage {
     grid-area: ForImage;
     height: 100%;
     margin: 10px;
-}
-
-.img:hover {
-    margin: 1px;
 }
